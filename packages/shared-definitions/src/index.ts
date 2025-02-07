@@ -1,1 +1,1 @@
-export * from './lib/shared-definitions.js';
+export * from './summary.js';
