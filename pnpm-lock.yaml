@@ -74,6 +74,9 @@ importers:
 
   packages/dds:
     dependencies:
+      '@unison/shared-definitions':
+        specifier: workspace:*
+        version: link:../shared-definitions
       tslib:
         specifier: ^2.3.0
         version: 2.8.1

@@ -1,1 +1,1 @@
-export * from './lib/dds.js';
+export * from './SharedStructure.js';
