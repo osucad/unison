@@ -6,4 +6,13 @@ export abstract class SharedStructure {
       local: boolean,
       localOpMetadata: number,
   ): void
+
+
+  submitLocalOp(
+      op: unknown,
+      undoOp: unknown,
+      localOpMetadata: unknown = undefined
+  ) {
+    // TODO
+  }
 }

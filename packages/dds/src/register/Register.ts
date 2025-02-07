@@ -14,7 +14,21 @@ export class Register<T> extends SharedStructure {
   }
 
   set value(value) {
-    this.#value = value;
+    const previousValue = this.#set(value);
+
+    const op: IRegisterSetMessage = {
+      type: 'set',
+      value: value
+    }
+
+    const undoOp: IRegisterSetMessage = {
+      type: 'set',
+      value: previousValue
+    }
+
+    const messageId = ++this.#messageId;
+
+    this.submitLocalOp(op, undoOp, messageId)
   }
 
   constructor(initialValue: T) {
@@ -46,5 +60,11 @@ export class Register<T> extends SharedStructure {
 
     if (!local)
       this.#value = op.value as T;
+  }
+
+  #set(value: T) {
+    const previousValue = this.#value;
+    this.#value = value;
+    return previousValue;
   }
 }
