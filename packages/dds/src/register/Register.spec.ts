@@ -14,7 +14,7 @@ describe('Register', () => {
       type: '' ,
       sequenceNumber: 0,
       contents: op,
-    }, true)
+    }, false, undefined)
 
     expect(register.value).toBe(2)
   })

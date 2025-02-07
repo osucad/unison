@@ -4,5 +4,6 @@ export abstract class SharedStructure {
   abstract handle(
       message: ISequencedDocumentMessage,
       local: boolean,
+      localOpMetadata: number,
   ): void
 }
