@@ -1,0 +1,72 @@
+{
+  "name": "@unison/devserver",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "devserver",
+    "projectType": "application",
+    "sourceRoot": "server/devserver/src",
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "server/devserver/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "server/devserver/src/main.ts",
+          "tsConfig": "server/devserver/tsconfig.app.json",
+          "assets": [
+            "server/devserver/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "devserver:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "devserver:build:development"
+          },
+          "production": {
+            "buildTarget": "devserver:build:production"
+          }
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@types/nconf": "^0.10.7",
+    "nconf": "^0.12.1"
+  }
+}
