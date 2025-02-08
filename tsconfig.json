@@ -8,6 +8,9 @@
     },
     {
       "path": "./packages/dds"
+    },
+    {
+      "path": "./packages/runtime"
     }
   ]
 }
