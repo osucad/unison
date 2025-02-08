@@ -1,8 +1,14 @@
 import { ISequencedDocumentMessage, ISummaryTree } from '@unison/shared-definitions'
 import { IChannelServices } from "./IChannelServices.js";
 import { IChannelStorage } from "./IChannelStorage.js";
+import { IObjectAttributes } from "./IObjectAttributes.js";
 
 export abstract class SharedStructure {
+  protected constructor(
+      readonly attributes: IObjectAttributes
+  ) {
+  }
+
   #services?: IChannelServices;
   #id?: string;
 

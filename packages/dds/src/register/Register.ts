@@ -37,7 +37,10 @@ export class Register<T> extends SharedStructure {
   }
 
   constructor(initialValue: T) {
-    super();
+    super({
+      type: '@unison/register',
+      version: '0.1'
+    });
     this.#value = initialValue;
   }
 
