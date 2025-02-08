@@ -1,8 +1,9 @@
-import { ISequencedDocumentMessage } from '@unison/shared-definitions'
-import { IDeltaConnection } from "./IDeltaConnection.js";
+import { ISequencedDocumentMessage, ISummaryTree } from '@unison/shared-definitions'
+import { IChannelServices } from "./IChannelServices.js";
+import { IChannelStorage } from "./IChannelStorage.js";
 
 export abstract class SharedStructure {
-  #deltaConnection?: IDeltaConnection;
+  #services?: IChannelServices;
   #id?: string;
 
   get id() {
@@ -10,20 +11,34 @@ export abstract class SharedStructure {
   }
 
   get isAttached() {
-    return this.#deltaConnection !== undefined;
+    return this.#services !== undefined;
   }
 
   attach(
       id: string,
-      deltas: IDeltaConnection
+      services: IChannelServices
   ) {
     this.#id = id;
-    this.#deltaConnection = deltas;
+    this.#services = services;
     this.#attachDeltaConnection();
   }
 
+  async load(
+      id: string,
+      services: IChannelServices
+  ) {
+    this.#id = id;
+    this.#services = services;
+    await this.loadFromSummary(services.storage);
+    this.#attachDeltaConnection();
+  }
+
+  protected abstract loadFromSummary(storage: IChannelStorage): Promise<void>;
+
+  abstract summarize(): Promise<ISummaryTree>;
+
   #attachDeltaConnection() {
-    this.#deltaConnection?.attach({
+    this.#services!.deltas.attach({
       handle: (message, local, localOpMetadata) =>
           this.handle(message, local, localOpMetadata)
     })
@@ -40,6 +55,6 @@ export abstract class SharedStructure {
       undoOp: unknown,
       localOpMetadata: unknown = undefined
   ) {
-    this.#deltaConnection?.submitOp(op, undoOp, localOpMetadata)
+    this.#services?.deltas.submitOp(op, undoOp, localOpMetadata);
   }
 }

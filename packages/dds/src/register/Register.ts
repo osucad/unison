@@ -1,9 +1,14 @@
-import { ISequencedDocumentMessage } from "@unison/shared-definitions";
+import { ISequencedDocumentMessage, ISummaryTree } from "@unison/shared-definitions";
+import { IChannelStorage, readAndParse } from "../IChannelStorage.js";
 import { SharedStructure } from "../SharedStructure.js";
 
 export interface IRegisterSetMessage {
   type: 'set',
   value: unknown;
+}
+
+export interface IRegisterSummary {
+  value: string;
 }
 
 export class Register<T> extends SharedStructure {
@@ -60,6 +65,29 @@ export class Register<T> extends SharedStructure {
 
     if (!local)
       this.#value = op.value as T;
+  }
+
+  protected override async loadFromSummary(storage: IChannelStorage): Promise<void> {
+    const content = await readAndParse<IRegisterSummary>(storage, 'head')
+
+    this.#value = JSON.parse(content.value);
+  }
+
+  async summarize(): Promise<ISummaryTree> {
+    const summary: IRegisterSummary = {
+      value: JSON.stringify(this.#value)
+    }
+
+    return {
+      type: 'tree',
+      tree: {
+        head: {
+          type: 'blob',
+          content: JSON.stringify(summary),
+          encoding: 'utf-8'
+        }
+      }
+    }
   }
 
   #set(value: T) {

@@ -9,4 +9,4 @@ export interface ISummaryBlob {
   encoding: 'utf-8' | 'base64'
 }
 
-export type SummaryObject = ISummaryTree
+export type SummaryObject = ISummaryTree | ISummaryBlob
