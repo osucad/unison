@@ -14,9 +14,6 @@
     "tslib": "^2.3.0",
     "typescript": "~5.7.2"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "express": "^4.21.2"
   },
