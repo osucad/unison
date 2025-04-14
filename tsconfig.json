@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./apps/unison-server"
+    },
+    {
+      "path": "./packages/protocol"
     }
   ]
 }

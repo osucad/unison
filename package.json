@@ -22,16 +22,31 @@
     "@types/node": "~18.16.9",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
+    "jsonc-eslint-parser": "^2.1.0",
     "nx": "20.8.0",
     "react-refresh": "^0.10.0",
     "tslib": "^2.3.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.19.0",
+    "verdaccio": "^6.0.5",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "axios": "^1.6.0",
     "express": "^4.21.2"
   },
-  "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4"
+  "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4",
+  "nx": {
+    "includedScripts": [],
+    "targets": {
+      "local-registry": {
+        "executor": "@nx/js:verdaccio",
+        "options": {
+          "port": 4873,
+          "config": ".verdaccio/config.yml",
+          "storage": "tmp/local-registry/storage"
+        }
+      }
+    }
+  }
 }

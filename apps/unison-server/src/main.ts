@@ -1,25 +1,15 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import { createApp } from "./app";
 
-import express from 'express';
-import * as http from 'node:http'
-import { Server } from 'socket.io';
-import { handleWebSockets } from "./websocket";
+async function main() {
+  const app = await createApp()
 
-const app = express();
-const server = http.createServer(app)
-const io = new Server(server, {
-  path: '/api/v1/ws'
-})
+  const port = process.env.PORT || 3333;
 
-handleWebSockets(io)
+  const server = app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`);
+  });
 
-const port = process.env.PORT || 3333;
+  server.on('error', console.error);
+}
 
-app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-
-server.on('error', console.error);
+main().then()
