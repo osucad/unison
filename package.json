@@ -5,16 +5,32 @@
   "scripts": {},
   "private": true,
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@nx/eslint": "20.8.0",
+    "@nx/eslint-plugin": "20.8.0",
     "@nx/express": "^20.8.0",
     "@nx/js": "20.8.0",
+    "@nx/node": "20.8.0",
+    "@nx/web": "20.8.0",
+    "@nx/webpack": "20.8.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
+    "@svgr/webpack": "^8.0.1",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@types/express": "^4.17.21",
+    "@types/node": "~18.16.9",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
     "nx": "20.8.0",
+    "react-refresh": "^0.10.0",
     "tslib": "^2.3.0",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.19.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "axios": "^1.6.0",
     "express": "^4.21.2"
   },
   "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4"
