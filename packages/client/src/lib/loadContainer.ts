@@ -1,7 +1,7 @@
 import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
 import { io, Socket } from "socket.io-client";
 import { ITokenProvider } from "./auth/ITokenProvider.js";
-import { catchUpWithDeltaStream } from "./CatchupMonitor.js";
+import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
 import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 import { createTimeout } from "./util/timeout.js";
 
