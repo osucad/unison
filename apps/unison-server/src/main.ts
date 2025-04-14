@@ -4,18 +4,22 @@
  */
 
 import express from 'express';
-import * as path from 'path';
+import * as http from 'node:http'
+import { Server } from 'socket.io';
+import { handleWebSockets } from "./websocket";
 
 const app = express();
+const server = http.createServer(app)
+const io = new Server(server, {
+  path: '/api/v1/ws'
+})
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-app.get('/api', (req, res) => {
-  res.send({ message: 'Welcome to unison-server!' });
-});
+handleWebSockets(io)
 
 const port = process.env.PORT || 3333;
-const server = app.listen(port, () => {
+
+app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
+
 server.on('error', console.error);
