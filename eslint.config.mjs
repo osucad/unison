@@ -5,8 +5,10 @@ export default [
     ...nx.configs["flat/typescript"],
     ...nx.configs["flat/javascript"],
     {
-        ignores: [
-            "**/dist"
+        "ignores": [
+            "**/dist",
+            "**/vite.config.*.timestamp*",
+            "**/vitest.config.*.timestamp*"
         ]
     },
     {
@@ -26,9 +28,23 @@ export default [
                     ],
                     depConstraints: [
                         {
-                            sourceTag: "*",
+                            sourceTag: "scope:shared",
                             onlyDependOnLibsWithTags: [
-                                "*"
+                                "scope:shared"
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:server",
+                            onlyDependOnLibsWithTags: [
+                                "scope:server",
+                                "scope:shared",
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:client",
+                            onlyDependOnLibsWithTags: [
+                                "scope:client",
+                                "scope:shared",
                             ]
                         }
                     ]

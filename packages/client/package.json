@@ -1,6 +1,7 @@
 {
-  "name": "@unison/protocol",
+  "name": "@unison/client",
   "version": "0.0.1",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,9 +19,12 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "tslib": "^2.3.0"
+    "@unison/protocol": "workspace:^",
+    "socket.io-client": "^4.8.1"
   },
   "nx": {
-    "tags": ["scope:shared"]
+    "tags": [
+      "scope:client"
+    ]
   }
 }

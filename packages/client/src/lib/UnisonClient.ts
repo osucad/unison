@@ -1,0 +1,34 @@
+import { ITokenProvider } from "./auth/ITokenProvider.js";
+import { ContainerLoader } from "./ContainerLoader.js";
+
+export interface IUnisonClientOptions {
+  tokenProvider: ITokenProvider
+  endpoints: IEndpointConfiguration
+}
+
+export interface IEndpointConfiguration {
+  ordererUrl: string
+}
+
+export interface GetDocumentOptions {
+  readonly?: boolean
+}
+
+export class UnisonClient {
+  constructor(options: IUnisonClientOptions) {
+    this.tokenProvider = options.tokenProvider
+    this.endpoints = options.endpoints
+  }
+
+  private readonly tokenProvider: ITokenProvider
+  private readonly endpoints: IEndpointConfiguration
+
+  async getDocument(documentId: string, options: GetDocumentOptions = {}) {
+    const loader = new ContainerLoader(
+        this.endpoints,
+        this.tokenProvider,
+    )
+
+    return loader.load()
+  }
+}
