@@ -1,5 +1,5 @@
 import { ITokenProvider } from "./auth/ITokenProvider.js";
-import { ContainerLoader } from "./ContainerLoader.js";
+import { loadContainer } from "./loadContainer.js";
 
 export interface IUnisonClientOptions {
   tokenProvider: ITokenProvider
@@ -24,11 +24,11 @@ export class UnisonClient {
   private readonly endpoints: IEndpointConfiguration
 
   async getDocument(documentId: string, options: GetDocumentOptions = {}) {
-    const loader = new ContainerLoader(
+    await loadContainer(
+        documentId,
+        options,
         this.endpoints,
         this.tokenProvider,
     )
-
-    return loader.load(documentId, options)
   }
 }
