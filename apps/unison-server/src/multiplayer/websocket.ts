@@ -42,6 +42,8 @@ function handleConnection(
       const connection = result.value
 
       connectionMap.set(options.documentId, connection)
+
+      callback({ success: true })
     } finally {
       connecting.delete(options.documentId)
     }

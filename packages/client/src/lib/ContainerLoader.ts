@@ -1,6 +1,7 @@
+import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
 import { ITokenProvider } from "./auth/ITokenProvider.js";
-import { IEndpointConfiguration } from "./UnisonClient.js";
-import { io } from "socket.io-client";
+import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
+import { io, Socket } from "socket.io-client";
 
 export class ContainerLoader {
   constructor(
@@ -9,15 +10,36 @@ export class ContainerLoader {
   ) {
   }
 
-  async load() {
-    const connection = io(this.endpoints.ordererUrl, {
+  async load(documentId: string, options: GetDocumentOptions) {
+    const scopes = options.readonly
+        ? [ScopeTypes.Read]
+        : [ScopeTypes.Read, ScopeTypes.Write]
+
+    const { token } = await this.tokenProvider.getToken(documentId, scopes)
+
+    const connection: Socket<ServerMessages, ClientMessages> = io(this.endpoints.ordererUrl, {
       transports: ['websocket'],
       multiplex: true,
     })
 
-    await new Promise<void>((resolve, reject) => {
-      connection.once('connect', resolve)
-      connection.once('connect_error', reject)
+    connection.onAny(console.log)
+
+    await waitForConnected(connection)
+
+    const response = await connection.emitWithAck('connectDocument', {
+      documentId,
+      token,
+      version: PROTOCOL_VERSION
     })
+
+    if (!response.success)
+      throw new Error("Failed to connect to document", { cause: response })
   }
+}
+
+async function waitForConnected(connection: Socket) {
+  await new Promise<void>((resolve, reject) => {
+    connection.once('connect', resolve)
+    connection.once('connect_error', reject)
+  })
 }

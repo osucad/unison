@@ -29,6 +29,6 @@ export class UnisonClient {
         this.tokenProvider,
     )
 
-    return loader.load()
+    return loader.load(documentId, options)
   }
 }
