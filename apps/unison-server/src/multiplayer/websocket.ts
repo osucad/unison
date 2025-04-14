@@ -1,13 +1,70 @@
 import { Server, Socket } from "socket.io";
-import { ClientMessages, ServerMessages } from "@unison/protocol";
+import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/protocol";
 import { connectDocument } from "./connectDocument";
+import { IUnisonServerResources } from "../services/IUnisonServerResources";
+import { OrdererConnection } from "../services/sequencer/OrdererConnection";
 
-export function handleWebSockets(io: Server<ClientMessages, ServerMessages>) {
-  io.on('connect', client => {
-    handleConnection(client)
+export function handleWebSockets(
+    io: Server<ClientMessages, ServerMessages>,
+    resources: IUnisonServerResources,
+) {
+  const { ordererService } = resources
+
+  ordererService.on('deltasProduced', (documentId, deltas) => io.to(documentId).emit('deltas', deltas))
+
+  io.on('connect', async client => {
+    handleConnection(client, resources)
   })
 }
 
-function handleConnection(client: Socket<ClientMessages, ServerMessages>) {
-  client.on('connectDocument', async (options, callback) => callback(await connectDocument(client, options)))
+function handleConnection(
+    client: Socket<ClientMessages, ServerMessages>,
+    resources: IUnisonServerResources,
+) {
+  const connectionMap = new Map<string, OrdererConnection>()
+  const connecting = new Set<string>()
+
+  client.on('connectDocument', async (options, callback) => {
+    if (connecting.has(options.documentId) || connectionMap.has(options.documentId)) {
+      callback(alreadyConnected(options.documentId))
+      return
+    }
+
+    try {
+      connecting.add(options.documentId)
+      const result = await connectDocument(client, options, resources)
+
+      if (result.isErr()) {
+        callback(result.error)
+        return
+      }
+
+      const connection = result.value
+
+      connectionMap.set(options.documentId, connection)
+    } finally {
+      connecting.delete(options.documentId)
+    }
+  })
+
+  client.on('submitOps', (documentId, message) => {
+    const connection = connectionMap.get(documentId)
+    if (!connection) {
+      // TODO: send error response
+      return
+    }
+
+    if (message.type !== MessageType.Operation)
+      return;
+
+    connection.send({
+      clientId: client.id,
+      operation: {
+        type: MessageType.Operation,
+        contents: message.contents,
+        clientSequenceNumber: message.clientSequenceNumber,
+      },
+      timestamp: Date.now(),
+    })
+  })
 }

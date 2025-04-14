@@ -26,7 +26,11 @@
     }
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
     "@unison/protocol": "workspace:^",
+    "eventemitter3": "^5.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "neverthrow": "^8.2.0",
     "socket.io": "^4.8.1"
   }
 }
