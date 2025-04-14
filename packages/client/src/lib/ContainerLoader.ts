@@ -1,7 +1,9 @@
 import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
-import { ITokenProvider } from "./auth/ITokenProvider.js";
-import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 import { io, Socket } from "socket.io-client";
+import { ITokenProvider } from "./auth/ITokenProvider.js";
+import { catchUpWithDeltaStream } from "./CatchupMonitor.js";
+import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
+import { createTimeout } from "./util/timeout.js";
 
 export class ContainerLoader {
   constructor(
@@ -22,8 +24,6 @@ export class ContainerLoader {
       multiplex: true,
     })
 
-    connection.onAny(console.log)
-
     await waitForConnected(connection)
 
     const response = await connection.emitWithAck('connectDocument', {
@@ -34,6 +34,9 @@ export class ContainerLoader {
 
     if (!response.success)
       throw new Error("Failed to connect to document", { cause: response })
+
+    const catchUpResult = await catchUpWithDeltaStream(documentId, connection, createTimeout(10_000))
+    console.log(catchUpResult)
   }
 }
 

@@ -1,7 +1,7 @@
-import { MessageSequencer } from "./MessageSequencer";
-import { IProducer } from "../../multiplayer/IProducer";
 import { ISequencedDocumentMessage } from "@unison/protocol";
 import { EventEmitter } from "eventemitter3";
+import { IProducer } from "../../multiplayer/IProducer";
+import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";
 import { OrdererConnection } from "./OrdererConnection";
 
 export interface OrdererServiceEvents {
@@ -11,8 +11,31 @@ export interface OrdererServiceEvents {
 export class OrdererService extends EventEmitter<OrdererServiceEvents> {
   private readonly sequencers = new Map<string, MessageSequencer>()
 
+  private messageBuffer: [string, RawOperationMessage][] = []
+
+  private started = false
+
+  start() {
+    if (this.started)
+      return
+
+    setInterval(() => this.poll(), 5)
+
+    this.started = true
+  }
+
+  private poll() {
+    const messages = this.messageBuffer
+    this.messageBuffer = []
+
+    for (const [documentId, message] of messages)
+      this.getSequencer(documentId).process(message)
+  }
+
   getConnection(documentId: string): OrdererConnection {
-    return new OrdererConnection(() => this.getSequencer(documentId))
+    return new OrdererConnection(message => {
+      this.messageBuffer.push([documentId, message])
+    })
   }
 
   private getSequencer(documentId: string) {

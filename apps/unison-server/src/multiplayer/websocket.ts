@@ -3,14 +3,13 @@ import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@
 import { connectDocument } from "./connectDocument";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
 import { OrdererConnection } from "../services/sequencer/OrdererConnection";
+import { broadcastMessages } from "./messageBroadcaster";
 
 export function handleWebSockets(
     io: Server<ClientMessages, ServerMessages>,
     resources: IUnisonServerResources,
 ) {
-  const { ordererService } = resources
-
-  ordererService.on('deltasProduced', (documentId, deltas) => io.to(documentId).emit('deltas', deltas))
+  broadcastMessages(resources, io)
 
   io.on('connect', async client => {
     handleConnection(client, resources)

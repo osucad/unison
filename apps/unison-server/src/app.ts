@@ -25,5 +25,7 @@ export async function createApp() {
 
   handleWebSockets(io, resources)
 
+  resources.ordererService.start()
+
   return server
 }

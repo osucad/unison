@@ -1,12 +1,8 @@
-import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";
+import { RawOperationMessage } from "./MessageSequencer";
 
 export class OrdererConnection {
   constructor(
-      private readonly getSequencer: () => MessageSequencer
+      readonly send: (message: RawOperationMessage) => void
   ) {
-  }
-
-  send(message: RawOperationMessage) {
-    this.getSequencer().process(message)
   }
 }

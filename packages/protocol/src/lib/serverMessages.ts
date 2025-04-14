@@ -1,6 +1,6 @@
 import { ISequencedDocumentMessage } from "./protocol";
 
 export interface ServerMessages {
-  deltas(message: ISequencedDocumentMessage[]): void
+  deltas(documentId: string, message: ISequencedDocumentMessage[]): void
 }
 
