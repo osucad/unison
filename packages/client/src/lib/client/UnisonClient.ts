@@ -1,5 +1,7 @@
+import { DDSFactory, DDSFactoryOrClass, normalizeDDSFactory } from "../dds/DDSFactory.js";
+import { Document, IDocumentOptions } from "../runtime/Document.js";
+import { DocumentSchema, normalizeDocumentSchema, UnwrapDocumentSchema } from "./DocumentSchema.js";
 import { ITokenProvider } from "./ITokenProvider.js";
-import { loadContainer } from "./loadContainer.js";
 
 export interface IUnisonClientOptions {
   tokenProvider: ITokenProvider
@@ -11,10 +13,6 @@ export interface IEndpointConfiguration {
   ordererUrl: string
 }
 
-export interface GetDocumentOptions {
-  readonly?: boolean
-}
-
 export class UnisonClient {
   constructor(options: IUnisonClientOptions) {
     this.tokenProvider = options.tokenProvider
@@ -24,12 +22,28 @@ export class UnisonClient {
   private readonly tokenProvider: ITokenProvider
   private readonly endpoints: IEndpointConfiguration
 
-  async getDocument(documentId: string, options: GetDocumentOptions = {}) {
-    await loadContainer(
-        documentId,
-        options,
-        this.endpoints,
-        this.tokenProvider,
-    )
+  public async createDocument<T extends DocumentSchema>(options: CreateDocumentOptions<T>): Promise<Document<UnwrapDocumentSchema<T>>> {
+    const schema = normalizeDocumentSchema(options.schema)
+
+    const types: DDSFactory[] = (options.types ?? []).map(normalizeDDSFactory)
+    for (const factory of Object.values(schema)) {
+      if (!types.some(it => it.attributes.type === factory.attributes.type))
+        types.push(factory)
+    }
+
+    const documentOptions: IDocumentOptions = {
+      schema,
+      types,
+    }
+
+    const document = Document.createDetached(documentOptions)
+
+    return document as unknown as Document<UnwrapDocumentSchema<T>>
   }
 }
+
+export interface CreateDocumentOptions<T extends DocumentSchema> {
+  readonly schema: T
+  readonly types?: readonly DDSFactoryOrClass[]
+}
+

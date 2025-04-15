@@ -1,6 +1,10 @@
-import { UnisonClient } from "./lib/client/UnisonClient.js";
+import { normalizeDocumentSchema } from "./lib/client/DocumentSchema.js";
 import { InsecureTokenProvider } from "./lib/client/InsecureTokenProvider.js";
-
+import { UnisonClient } from "./lib/client/UnisonClient.js";
+import { Counter } from "./lib/dds/counter/Counter.js";
+import { normalizeDDSFactory } from "./lib/dds/DDSFactory.js";
+import { DDSTypeRegistry } from "./lib/runtime/DDSTypeRegistry.js";
+import { UnisonRuntime } from "./lib/runtime/UnisonRuntime.js";
 
 const client = new UnisonClient({
   tokenProvider: new InsecureTokenProvider(),
@@ -10,4 +14,20 @@ const client = new UnisonClient({
   }
 })
 
-client.getDocument('15a33aae-b00b-414d-8a39-f8b32ce50b41')
+const document = await client.createDocument({
+  schema: {
+    counter: Counter
+  }
+})
+
+document.get('counter').value = 10
+
+const summary = document.runtime.createSummary()
+
+const runtime = new UnisonRuntime(
+    normalizeDocumentSchema({ counter: Counter }),
+    new DDSTypeRegistry([normalizeDDSFactory(Counter)]),
+    summary
+)
+
+console.log(runtime)
