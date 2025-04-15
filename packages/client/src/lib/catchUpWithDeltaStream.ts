@@ -4,7 +4,8 @@ import { ISummary } from "./loadContainer.js";
 import { Deferred } from "./util/deferred.js";
 
 export interface ICatchUpResult {
-  deltas: ISequencedDocumentMessage[]
+  readonly summary: ISummary
+  readonly deltas: ISequencedDocumentMessage[]
 }
 
 export async function catchUpWithDeltaStream(
@@ -52,7 +53,10 @@ export async function catchUpWithDeltaStream(
     }
 
     console.log(`All caught up, received ${receivedDeltas.length} deltas while catching up`)
-    deferred.resolve({ deltas: receivedDeltas })
+    deferred.resolve({
+      summary: summaryContent,
+      deltas: receivedDeltas
+    })
   }
 
   deferred.promise.finally(() => connection.off('deltas', onDeltaReceived))

@@ -2,6 +2,9 @@ import { ClientMessages, ISequencedDocumentMessage, PROTOCOL_VERSION, ScopeTypes
 import { io, Socket } from "socket.io-client";
 import { ITokenProvider } from "./auth/ITokenProvider.js";
 import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
+import { Container } from "./container/Container.js";
+import { DeltaStream } from "./container/DeltaStream.js";
+import { UnisonRuntime } from "./container/UnisonRuntime.js";
 import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 import { createTimeout } from "./util/timeout.js";
 
@@ -49,7 +52,18 @@ export async function loadContainer(
       createTimeout(10_000)
   )
 
-  console.log(catchUpResult)
+  const runtime = new UnisonRuntime(catchUpResult.summary)
+
+  const deltaStream = new DeltaStream(documentId, connection)
+
+  const container = new Container(
+      runtime,
+      deltaStream,
+  )
+
+  deltaStream.catchUp(catchUpResult.deltas)
+
+  return container
 }
 
 async function waitForConnected(connection: Socket) {
