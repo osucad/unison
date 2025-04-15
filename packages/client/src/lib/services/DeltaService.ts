@@ -4,17 +4,17 @@ import { IEndpointConfiguration } from "../client/UnisonClient.js";
 
 export class DeltaService {
   constructor(
+      private readonly documentId: string,
       private readonly endpoints: IEndpointConfiguration,
       private readonly tokenProvider: ITokenProvider
   ) {
   }
 
   async getDeltas(
-      documentId: string,
       first: number,
       last?: number
   ) {
-    const { endpoints, tokenProvider } = this
+    const { documentId, endpoints, tokenProvider } = this
 
     const { token } = await tokenProvider.getToken(documentId, [ScopeTypes.Read])
 

@@ -43,7 +43,8 @@ export async function catchUpWithDeltaStream(
       const last = lastKnownSequencedNumber - 1
 
       console.log(`Loading missing deltas: [${first} - ${last}]`)
-      const deltas = await deltaService.getDeltas(documentId, first, last)
+
+      const deltas = await deltaService.getDeltas(first, last)
 
       receivedDeltas.unshift(...deltas)
     } else {

@@ -46,7 +46,7 @@ export async function loadContainer(
     throw new Error(`Failed to connect to document: ${response.error}`)
 
   const documentStorage = new DocumentStorage(documentId, endpoints, tokenProvider)
-  const deltaService = new DeltaService(endpoints, tokenProvider)
+  const deltaService = new DeltaService(documentId, endpoints, tokenProvider)
 
   const summary = documentStorage.getSummary('latest')
 
