@@ -31,7 +31,7 @@ class DeltaChannel {
     if (!last)
       return this.deltas.filter(it => it.sequenceNumber >= first)
 
-    return this.deltas.filter(it => it.sequenceNumber >= first && it.sequenceNumber < last)
+    return this.deltas.filter(it => it.sequenceNumber >= first && it.sequenceNumber <= last)
   }
 
   append(deltas: ISequencedDocumentMessage[]) {
