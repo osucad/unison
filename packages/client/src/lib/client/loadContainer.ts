@@ -1,6 +1,6 @@
 import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
 import { io, Socket } from "socket.io-client";
-import { catchUpWithDeltaStream } from "../catchUpWithDeltaStream.js";
+import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
 import { Container } from "../container/Container.js";
 import { DeltaStream } from "../container/DeltaStream.js";
 import { IContainerServices } from "../container/IContainerServices.js";
