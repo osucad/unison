@@ -1,7 +1,7 @@
 import { ScopeTypes } from "@unison/protocol";
-import { ITokenProvider } from "../auth/ITokenProvider.js";
-import { ISummary } from "../loadContainer.js";
-import { IEndpointConfiguration } from "../UnisonClient.js";
+import { ITokenProvider } from "../client/ITokenProvider.js";
+import { ISummary } from "../client/loadContainer.js";
+import { IEndpointConfiguration } from "../client/UnisonClient.js";
 
 export class DocumentStorage {
   constructor(

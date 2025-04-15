@@ -1,6 +1,6 @@
 import { ISequencedDocumentMessage, ScopeTypes } from "@unison/protocol";
-import { ITokenProvider } from "../auth/ITokenProvider.js";
-import { IEndpointConfiguration } from "../UnisonClient.js";
+import { ITokenProvider } from "../client/ITokenProvider.js";
+import { IEndpointConfiguration } from "../client/UnisonClient.js";
 
 export class DeltaService {
   constructor(

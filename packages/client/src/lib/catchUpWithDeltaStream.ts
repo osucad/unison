@@ -1,6 +1,6 @@
 import { ClientMessages, ISequencedDocumentMessage, ServerMessages } from "@unison/protocol";
 import { Socket } from "socket.io-client";
-import { ISummary } from "./loadContainer.js";
+import { ISummary } from "./client/loadContainer.js";
 import { DeltaService } from "./services/DeltaService.js";
 import { Deferred } from "./util/deferred.js";
 

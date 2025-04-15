@@ -1,4 +1,4 @@
-import { ISummary } from "../loadContainer.js";
+import { ISummary } from "../client/loadContainer.js";
 
 export class UnisonRuntime {
   constructor(summary: ISummary) {

@@ -1,4 +1,4 @@
-import { ITokenProvider } from "./auth/ITokenProvider.js";
+import { ITokenProvider } from "./ITokenProvider.js";
 import { loadContainer } from "./loadContainer.js";
 
 export interface IUnisonClientOptions {

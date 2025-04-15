@@ -1,4 +1,4 @@
-import { unisonClient } from './UnisonClient.js';
+import { unisonClient } from './client/UnisonClient.js';
 
 describe('client', () => {
   it('should work', () => {

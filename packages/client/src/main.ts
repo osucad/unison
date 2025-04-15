@@ -1,5 +1,5 @@
-import { UnisonClient } from "./lib/UnisonClient.js";
-import { InsecureTokenProvider } from "./lib/auth/InsecureTokenProvider.js";
+import { UnisonClient } from "./lib/client/UnisonClient.js";
+import { InsecureTokenProvider } from "./lib/client/InsecureTokenProvider.js";
 
 
 const client = new UnisonClient({

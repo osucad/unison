@@ -1,1 +1,1 @@
-export * from './lib/UnisonClient.js';
+export * from './lib/client/UnisonClient.js';
