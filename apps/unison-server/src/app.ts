@@ -4,14 +4,17 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { handleWebSockets } from "./multiplayer/websocket";
 import { createRoutes } from "./routes";
+import { InMemoryDeltaStorage } from "./services/InMemoryDeltaStorage";
 import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
 import { IUnisonServerResources } from "./services/IUnisonServerResources";
 import { OrdererService } from "./services/sequencer/OrdererService";
+import { writeDeltasToStorage } from "./services/writeDeltasToStorage";
 
 export async function createApp() {
   const resources: IUnisonServerResources = {
     ordererService: new OrdererService(),
     tokenVerifier: new InsecureTokenVerifier(),
+    deltaStorage: new InMemoryDeltaStorage(),
   }
 
   const app = express();
@@ -27,9 +30,10 @@ export async function createApp() {
   const routes = createRoutes(resources)
 
   app.use(routes.summaries)
+  app.use(routes.deltas)
 
   handleWebSockets(io, resources)
-
+  writeDeltasToStorage(resources)
   resources.ordererService.start()
 
   return server

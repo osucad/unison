@@ -43,7 +43,6 @@ export async function catchUpWithDeltaStream(
       console.log(`Loading missing deltas: [${first} - ${last}]`)
       const deltas = await fetchDeltas(documentId, first, last)
 
-      console.log(`Loaded ${deltas.length} deltas`)
       receivedDeltas.unshift(...deltas)
     } else {
       const countBefore = receivedDeltas.length

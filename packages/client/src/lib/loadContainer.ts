@@ -11,6 +11,8 @@ export async function loadContainer(
     endpoints: IEndpointConfiguration,
     tokenProvider: ITokenProvider,
 ) {
+  console.log(`Loading container for document ${documentId}`)
+
   const scopes = options.readonly
       ? [ScopeTypes.Read]
       : [ScopeTypes.Read, ScopeTypes.Write]
@@ -24,11 +26,15 @@ export async function loadContainer(
 
   await waitForConnected(connection)
 
+  console.log('Established websocket connection')
+
   const response = await connection.emitWithAck('connectDocument', {
     documentId,
     token,
     version: PROTOCOL_VERSION
   })
+
+  console.log('Connected to delta stream')
 
   if (!response.success)
     throw new Error(`Failed to connect to document: ${response.error}`)
@@ -76,5 +82,15 @@ async function loadDeltas(
     first: number,
     last: number,
 ): Promise<ISequencedDocumentMessage[]> {
-  return []
+  console.log(`Loading deltas [${first} - ${last}] for document ${documentId}`)
+
+  const url = new URL(`${endpoints.api}/deltas/${documentId}`)
+  url.searchParams.set('documentId', documentId)
+  url.searchParams.set('first', first.toString())
+  url.searchParams.set('last', last.toString())
+
+  const deltas: ISequencedDocumentMessage[] = await fetch(url).then(res => res.json())
+
+  console.log(`Loaded ${deltas.length} deltas for document ${documentId}`)
+  return deltas
 }
