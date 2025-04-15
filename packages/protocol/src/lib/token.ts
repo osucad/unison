@@ -9,4 +9,5 @@ export interface IToken {
 export enum ScopeTypes {
   Read = 'document:read',
   Write = 'document:write',
+  Create = 'document:create',
 }
