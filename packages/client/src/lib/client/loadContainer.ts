@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { catchUpWithDeltaStream } from "../catchUpWithDeltaStream.js";
 import { Container } from "../container/Container.js";
 import { DeltaStream } from "../container/DeltaStream.js";
+import { IContainerServices } from "../container/IContainerServices.js";
 import { UnisonRuntime } from "../container/UnisonRuntime.js";
 import { DeltaService } from "../services/DeltaService.js";
 import { DocumentStorage } from "../services/DocumentStorage.js";
@@ -15,7 +16,7 @@ export async function loadContainer(
     options: GetDocumentOptions,
     endpoints: IEndpointConfiguration,
     tokenProvider: ITokenProvider,
-) {
+): Promise<{ container: Container, services: IContainerServices }> {
   console.log(`Loading container for document ${documentId}`)
 
   const scopes = options.readonly
@@ -44,10 +45,10 @@ export async function loadContainer(
   if (!response.success)
     throw new Error(`Failed to connect to document: ${response.error}`)
 
-  const documentStorage = new DocumentStorage(endpoints, tokenProvider)
+  const documentStorage = new DocumentStorage(documentId, endpoints, tokenProvider)
   const deltaService = new DeltaService(endpoints, tokenProvider)
 
-  const summary = documentStorage.getSummary(documentId, 'latest')
+  const summary = documentStorage.getSummary('latest')
 
   const catchUpResult = await catchUpWithDeltaStream(
       documentId,
@@ -68,7 +69,12 @@ export async function loadContainer(
 
   deltaStream.catchUp(catchUpResult.deltas)
 
-  return container
+  return {
+    container,
+    services: {
+      storage: documentStorage
+    }
+  }
 }
 
 async function waitForConnected(connection: Socket) {
