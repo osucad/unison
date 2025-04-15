@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "nx": {
+    "tags": ["scope:server"],
     "targets": {
       "serve": {
         "executor": "@nx/js:node",
