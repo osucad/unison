@@ -5,6 +5,7 @@ import { Container } from "../container/Container.js";
 import { DeltaStream } from "../container/DeltaStream.js";
 import { IContainerServices } from "../container/IContainerServices.js";
 import { UnisonRuntime } from "../container/UnisonRuntime.js";
+import { Audience } from "../services/Audience.js";
 import { DeltaService } from "../services/DeltaService.js";
 import { DocumentStorage } from "../services/DocumentStorage.js";
 import { createTimeout } from "../util/timeout.js";
@@ -62,6 +63,8 @@ export async function loadContainer(
 
   const deltaStream = new DeltaStream(documentId, connection)
 
+  const audience = new Audience(catchUpResult.summary, deltaStream)
+
   const container = new Container(
       runtime,
       deltaStream,
@@ -72,7 +75,8 @@ export async function loadContainer(
   return {
     container,
     services: {
-      storage: documentStorage
+      storage: documentStorage,
+      audience,
     }
   }
 }
