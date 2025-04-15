@@ -1,8 +1,8 @@
-import { Server, Socket } from "socket.io";
 import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/protocol";
-import { connectDocument } from "./connectDocument";
+import { Server, Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
 import { OrdererConnection } from "../services/sequencer/OrdererConnection";
+import { connectDocument } from "./connectDocument";
 import { broadcastMessages } from "./messageBroadcaster";
 
 export function handleWebSockets(
@@ -38,6 +38,11 @@ function handleConnection(
         return
       }
 
+      if (!client.connected) {
+        cleanupConnection(options.documentId, result.value)
+        return
+      }
+
       const connection = result.value
 
       connectionMap.set(options.documentId, connection)
@@ -68,4 +73,22 @@ function handleConnection(
       timestamp: Date.now(),
     })
   })
+
+  client.on('disconnect', () => {
+    for (const [documentId, connection] of [...connectionMap])
+      cleanupConnection(documentId, connection)
+  })
+
+  function cleanupConnection(documentId: string, connection: OrdererConnection) {
+    connectionMap.delete(documentId)
+    connection.send({
+      clientId: null,
+      timestamp: Date.now(),
+      operation: {
+        type: MessageType.ClientLeave,
+        clientSequenceNumber: -1,
+        contents: { clientId: client.id }
+      }
+    })
+  }
 }
