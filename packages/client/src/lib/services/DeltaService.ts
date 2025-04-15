@@ -1,11 +1,11 @@
 import { ISequencedDocumentMessage, ScopeTypes } from "@unison/protocol";
+import { Axios } from "axios";
 import { ITokenProvider } from "../client/ITokenProvider.js";
-import { IEndpointConfiguration } from "../client/UnisonClient.js";
 
 export class DeltaService {
   constructor(
       private readonly documentId: string,
-      private readonly endpoints: IEndpointConfiguration,
+      private readonly axios: Axios,
       private readonly tokenProvider: ITokenProvider
   ) {
   }
@@ -14,23 +14,23 @@ export class DeltaService {
       first: number,
       last?: number
   ) {
-    const { documentId, endpoints, tokenProvider } = this
+    const { documentId, axios, tokenProvider } = this
 
     const { token } = await tokenProvider.getToken(documentId, [ScopeTypes.Read])
 
     console.log(`Loading deltas [${first} - ${last}] for document ${documentId}`)
 
-    const url = new URL(`${endpoints.api}/deltas/${documentId}`)
-    url.searchParams.set('documentId', documentId)
-    url.searchParams.set('first', first.toString())
-    if (last !== undefined)
-      url.searchParams.set('last', last.toString())
-
-    const deltas: ISequencedDocumentMessage[] = await fetch(url, {
+    const deltas = await axios.get<ISequencedDocumentMessage[]>(`/deltas/${documentId}`, {
+      params: {
+        documentId,
+        first,
+        last,
+      },
+      responseType: 'json',
       headers: {
         Authorization: `Bearer ${token}`
-      }
-    }).then(res => res.json())
+      },
+    }).then(res => res.data)
 
     console.log(`Loaded ${deltas.length} deltas for document ${documentId}`)
     return deltas

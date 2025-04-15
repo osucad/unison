@@ -1,4 +1,5 @@
 import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
+import { Axios } from "axios";
 import { io, Socket } from "socket.io-client";
 import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
 import { Container } from "../container/Container.js";
@@ -19,6 +20,10 @@ export async function loadContainer(
     tokenProvider: ITokenProvider,
 ): Promise<{ container: Container, services: IContainerServices }> {
   console.log(`Loading container for document ${documentId}`)
+
+  const axios = new Axios({
+    baseURL: endpoints.api,
+  })
 
   const scopes = options.readonly
       ? [ScopeTypes.Read]
@@ -46,8 +51,8 @@ export async function loadContainer(
   if (!response.success)
     throw new Error(`Failed to connect to document: ${response.error}`)
 
-  const documentStorage = new DocumentStorage(documentId, endpoints, tokenProvider)
-  const deltaService = new DeltaService(documentId, endpoints, tokenProvider)
+  const documentStorage = new DocumentStorage(documentId, axios, tokenProvider)
+  const deltaService = new DeltaService(documentId, axios, tokenProvider)
 
   const summary = documentStorage.getSummary('latest')
 

@@ -154,6 +154,9 @@ importers:
       '@unison/protocol':
         specifier: workspace:^
         version: link:../protocol
+      axios:
+        specifier: ^1.6.0
+        version: 1.8.4
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
