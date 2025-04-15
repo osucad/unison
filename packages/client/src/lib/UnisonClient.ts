@@ -7,6 +7,7 @@ export interface IUnisonClientOptions {
 }
 
 export interface IEndpointConfiguration {
+  api: string
   ordererUrl: string
 }
 

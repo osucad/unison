@@ -1,11 +1,12 @@
+import cors from "cors";
 import express from "express";
 import http from "node:http";
-import cors from "cors";
 import { Server } from "socket.io";
 import { handleWebSockets } from "./multiplayer/websocket";
+import { createRoutes } from "./routes";
+import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
 import { IUnisonServerResources } from "./services/IUnisonServerResources";
 import { OrdererService } from "./services/sequencer/OrdererService";
-import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
 
 export async function createApp() {
   const resources: IUnisonServerResources = {
@@ -22,6 +23,10 @@ export async function createApp() {
       origin: '*'
     }
   })
+
+  const routes = createRoutes(resources)
+
+  app.use(routes.summaries)
 
   handleWebSockets(io, resources)
 

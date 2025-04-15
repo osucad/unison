@@ -10,7 +10,8 @@
     "types": [
       "node",
       "vite/client"
-    ]
+    ],
+    "lib": ["DOM"]
   },
   "include": [
     "src/**/*.ts"

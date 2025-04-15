@@ -1,4 +1,4 @@
-import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
+import { ClientMessages, ISequencedDocumentMessage, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
 import { io, Socket } from "socket.io-client";
 import { ITokenProvider } from "./auth/ITokenProvider.js";
 import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
@@ -31,9 +31,18 @@ export async function loadContainer(
   })
 
   if (!response.success)
-    throw new Error("Failed to connect to document", { cause: response })
+    throw new Error(`Failed to connect to document: ${response.error}`)
 
-  const catchUpResult = await catchUpWithDeltaStream(documentId, connection, createTimeout(10_000))
+  const summary = loadSummary(documentId, endpoints)
+
+  const catchUpResult = await catchUpWithDeltaStream(
+      documentId,
+      connection,
+      summary,
+      (documentId, first, last) => loadDeltas(documentId, endpoints, first, last),
+      createTimeout(10_000)
+  )
+
   console.log(catchUpResult)
 }
 
@@ -42,4 +51,30 @@ async function waitForConnected(connection: Socket) {
     connection.once('connect', resolve)
     connection.once('connect_error', reject)
   })
+}
+
+export interface ISummary {
+  sequenceNumber: number
+  contents: unknown
+}
+
+async function loadSummary(
+    documentId: string,
+    endpoints: IEndpointConfiguration
+): Promise<ISummary> {
+  console.log(`Loading summary for document ${documentId}`)
+
+  const summary: ISummary = await fetch(`${endpoints.api}/documents/${documentId}/summary/latest`).then(res => res.json())
+
+  console.log(`Loaded summary for document ${documentId} [sequenceNumber=${summary.sequenceNumber}]`)
+  return summary
+}
+
+async function loadDeltas(
+    documentId: string,
+    endpoints: IEndpointConfiguration,
+    first: number,
+    last: number,
+): Promise<ISequencedDocumentMessage[]> {
+  return []
 }
