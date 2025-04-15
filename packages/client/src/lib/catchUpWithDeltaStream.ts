@@ -1,6 +1,7 @@
 import { ClientMessages, ISequencedDocumentMessage, ServerMessages } from "@unison/protocol";
 import { Socket } from "socket.io-client";
 import { ISummary } from "./loadContainer.js";
+import { DeltaService } from "./services/DeltaService.js";
 import { Deferred } from "./util/deferred.js";
 
 export interface ICatchUpResult {
@@ -12,7 +13,7 @@ export async function catchUpWithDeltaStream(
     documentId: string,
     connection: Socket<ServerMessages, ClientMessages>,
     summary: Promise<ISummary>,
-    fetchDeltas: (documentId: string, first: number, last: number) => Promise<ISequencedDocumentMessage[]>,
+    deltaService: DeltaService,
     abortSignal?: AbortSignal,
 ): Promise<ICatchUpResult> {
   const deferred = new Deferred<ICatchUpResult>()
@@ -42,7 +43,7 @@ export async function catchUpWithDeltaStream(
       const last = lastKnownSequencedNumber - 1
 
       console.log(`Loading missing deltas: [${first} - ${last}]`)
-      const deltas = await fetchDeltas(documentId, first, last)
+      const deltas = await deltaService.getDeltas(documentId, first, last)
 
       receivedDeltas.unshift(...deltas)
     } else {

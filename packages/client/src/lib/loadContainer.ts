@@ -5,6 +5,8 @@ import { catchUpWithDeltaStream } from "./catchUpWithDeltaStream.js";
 import { Container } from "./container/Container.js";
 import { DeltaStream } from "./container/DeltaStream.js";
 import { UnisonRuntime } from "./container/UnisonRuntime.js";
+import { DeltaService } from "./services/DeltaService.js";
+import { DocumentStorage } from "./services/DocumentStorage.js";
 import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 import { createTimeout } from "./util/timeout.js";
 
@@ -42,13 +44,16 @@ export async function loadContainer(
   if (!response.success)
     throw new Error(`Failed to connect to document: ${response.error}`)
 
-  const summary = loadSummary(documentId, endpoints)
+  const documentStorage = new DocumentStorage(endpoints, tokenProvider)
+  const deltaService = new DeltaService(endpoints, tokenProvider)
+
+  const summary = documentStorage.getSummary(documentId, 'latest')
 
   const catchUpResult = await catchUpWithDeltaStream(
       documentId,
       connection,
       summary,
-      (documentId, first, last) => loadDeltas(documentId, endpoints, first, last),
+      deltaService,
       createTimeout(10_000)
   )
 
@@ -76,35 +81,4 @@ async function waitForConnected(connection: Socket) {
 export interface ISummary {
   sequenceNumber: number
   contents: unknown
-}
-
-async function loadSummary(
-    documentId: string,
-    endpoints: IEndpointConfiguration
-): Promise<ISummary> {
-  console.log(`Loading summary for document ${documentId}`)
-
-  const summary: ISummary = await fetch(`${endpoints.api}/documents/${documentId}/summary/latest`).then(res => res.json())
-
-  console.log(`Loaded summary for document ${documentId} [sequenceNumber=${summary.sequenceNumber}]`)
-  return summary
-}
-
-async function loadDeltas(
-    documentId: string,
-    endpoints: IEndpointConfiguration,
-    first: number,
-    last: number,
-): Promise<ISequencedDocumentMessage[]> {
-  console.log(`Loading deltas [${first} - ${last}] for document ${documentId}`)
-
-  const url = new URL(`${endpoints.api}/deltas/${documentId}`)
-  url.searchParams.set('documentId', documentId)
-  url.searchParams.set('first', first.toString())
-  url.searchParams.set('last', last.toString())
-
-  const deltas: ISequencedDocumentMessage[] = await fetch(url).then(res => res.json())
-
-  console.log(`Loaded ${deltas.length} deltas for document ${documentId}`)
-  return deltas
 }

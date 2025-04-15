@@ -48,7 +48,7 @@ function verifyToken(
     return false
 
   for (const scope of scopes) {
-    if (token.scopes.includes(scope))
+    if (!token.scopes.includes(scope))
       return false
 
   }

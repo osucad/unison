@@ -1,7 +1,7 @@
 import { IUser } from "./user";
 
 export interface IToken {
-  documentId: string
+  documentId?: string
   user: IUser
   scopes: string[]
 }

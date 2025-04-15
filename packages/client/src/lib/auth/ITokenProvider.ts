@@ -1,5 +1,5 @@
 export interface ITokenProvider {
-  getToken(documentId: string, scopes: string[]): Promise<ITokenResult>
+  getToken(documentId: string | undefined, scopes: string[]): Promise<ITokenResult>
 }
 
 export interface ITokenResult {
