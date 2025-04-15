@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import http from "node:http";
+import compression from 'compression'
 import { Server } from "socket.io";
 import { handleWebSockets } from "./multiplayer/websocket";
 import { createRoutes } from "./routes";
@@ -19,9 +20,11 @@ export async function createApp() {
 
   const app = express();
   app.use(cors())
+  app.use(compression())
 
   const server = http.createServer(app)
   const io = new Server(server, {
+    perMessageDeflate: true,
     cors: {
       origin: '*'
     }
