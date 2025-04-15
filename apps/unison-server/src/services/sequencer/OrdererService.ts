@@ -6,6 +6,7 @@ import { OrdererConnection } from "./OrdererConnection";
 
 export interface OrdererServiceEvents {
   deltasProduced: (documentId: string, deltas: ISequencedDocumentMessage[]) => void
+  stop: () => void
 }
 
 export class OrdererService extends EventEmitter<OrdererServiceEvents> {
@@ -19,17 +20,38 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents> {
     if (this.started)
       return
 
-    setInterval(() => this.poll(), 5)
+    const interval = setInterval(() => this.poll(), 50)
+
+    this.once('stop', () => clearInterval(interval))
 
     this.started = true
+  }
+
+  stop() {
+    if (!this.started)
+      return
+
+    this.emit('stop')
+
+    this.started = false
   }
 
   private poll() {
     const messages = this.messageBuffer
     this.messageBuffer = []
 
-    for (const [documentId, message] of messages)
-      this.getSequencer(documentId).process(message)
+    const groupedMessages = new Map<string, RawOperationMessage[]>()
+
+    for (const [documentId, message] of messages) {
+      if (!groupedMessages.has(documentId))
+        groupedMessages.set(documentId, [])
+
+      groupedMessages.get(documentId)!.push(message)
+    }
+
+    for (const [documentId, messages] of groupedMessages) {
+      this.getSequencer(documentId).process(messages)
+    }
   }
 
   getConnection(documentId: string): OrdererConnection {
