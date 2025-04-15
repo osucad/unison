@@ -13,7 +13,7 @@ export class InsecureTokenProvider implements ITokenProvider {
     }
 
     return {
-      token: JSON.stringify(token)
+      token: JSON.stringify({ insecureToken: token })
     }
   }
 }

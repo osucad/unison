@@ -1,6 +1,8 @@
 import { IToken } from "@unison/protocol";
 import { ITokenVerifier } from "./ITokenVerifier";
-import { fromThrowable, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
+
+const safeParse = fromThrowable(JSON.parse)
 
 /**
  * Token verifier that treats the token as a json string
@@ -10,6 +12,7 @@ import { fromThrowable, Result } from "neverthrow";
  */
 export class InsecureTokenVerifier implements ITokenVerifier {
   verifyToken(token: string): Result<IToken, unknown> {
-    return fromThrowable(JSON.parse)(token)
+    return safeParse(token)
+        .andThen(token => token.insecureToken ? ok(token.insecureToken) : err())
   }
 }
