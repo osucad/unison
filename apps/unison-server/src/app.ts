@@ -11,13 +11,7 @@ import { IUnisonServerResources } from "./services/IUnisonServerResources";
 import { OrdererService } from "./services/sequencer/OrdererService";
 import { writeDeltasToStorage } from "./services/writeDeltasToStorage";
 
-export async function createApp() {
-  const resources: IUnisonServerResources = {
-    ordererService: new OrdererService(),
-    tokenVerifier: new InsecureTokenVerifier(),
-    deltaStorage: new InMemoryDeltaStorage(),
-  }
-
+export async function createApp(resources: IUnisonServerResources) {
   const app = express();
   app.use(cors())
   app.use(compression())

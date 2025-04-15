@@ -1,7 +1,17 @@
 import { createApp } from "./app";
+import { InMemoryDeltaStorage } from "./services/InMemoryDeltaStorage";
+import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
+import { IUnisonServerResources } from "./services/IUnisonServerResources";
+import { OrdererService } from "./services/sequencer/OrdererService";
 
 async function main() {
-  const app = await createApp()
+  const resources: IUnisonServerResources = {
+    ordererService: new OrdererService(),
+    tokenVerifier: new InsecureTokenVerifier(),
+    deltaStorage: new InMemoryDeltaStorage(),
+  }
+
+  const app = await createApp(resources)
 
   const port = process.env.PORT || 3333;
 
