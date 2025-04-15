@@ -1,14 +1,14 @@
-import { ClientMessages, ISequencedDocumentMessage, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
+import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/protocol";
 import { io, Socket } from "socket.io-client";
-import { ITokenProvider } from "./ITokenProvider.js";
 import { catchUpWithDeltaStream } from "../catchUpWithDeltaStream.js";
 import { Container } from "../container/Container.js";
 import { DeltaStream } from "../container/DeltaStream.js";
 import { UnisonRuntime } from "../container/UnisonRuntime.js";
 import { DeltaService } from "../services/DeltaService.js";
 import { DocumentStorage } from "../services/DocumentStorage.js";
-import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 import { createTimeout } from "../util/timeout.js";
+import { ITokenProvider } from "./ITokenProvider.js";
+import { GetDocumentOptions, IEndpointConfiguration } from "./UnisonClient.js";
 
 export async function loadContainer(
     documentId: string,
