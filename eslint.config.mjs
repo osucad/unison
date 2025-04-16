@@ -1,7 +1,8 @@
 import nx from "@nx/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin";
+import tseslint from "typescript-eslint";
 
-export default [
+export default tseslint.config(
   ...nx.configs["flat/base"],
   ...nx.configs["flat/typescript"],
   ...nx.configs["flat/javascript"],
@@ -72,7 +73,20 @@ export default [
       "@stylistic/semi": ["error", "always"],
       "@stylistic/brace-style": ["error", "allman"],
       "@stylistic/member-delimiter-style": ["error"],
-      "@stylistic/quotes": ["error", "double"]
+      "@stylistic/quotes": ["error", "double"],
     }
-  }
-];
+  },
+  {
+    files: ["**/*.ts"],
+    ignores: ["**/*.spec.ts", "**/*.d.ts"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      "@nx/workspace-no-unused-results": "error",
+    },
+  },
+);

@@ -10,9 +10,9 @@ const safeParse = fromThrowable(JSON.parse);
  * @remarks
  * Do NOT use in production!
  */
-export class InsecureTokenVerifier implements ITokenVerifier 
+export class InsecureTokenVerifier implements ITokenVerifier
 {
-  verifyToken(token: string): Result<IToken, unknown> 
+  verifyToken(token: string): Result<IToken, unknown>
   {
     return safeParse(token)
       .andThen(token => token.insecureToken ? ok(token.insecureToken) : err());
