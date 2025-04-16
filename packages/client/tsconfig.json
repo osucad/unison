@@ -4,10 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../dds-base"
+      "path": "../client-definitions"
     },
     {
-      "path": "../client-definitions"
+      "path": "../dds-base"
     },
     {
       "path": "../protocol"

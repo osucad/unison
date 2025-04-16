@@ -175,6 +175,9 @@ importers:
 
   packages/client-definitions:
     dependencies:
+      '@unison/protocol':
+        specifier: workspace:^
+        version: link:../protocol
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -214,9 +217,6 @@ importers:
 
   packages/dds-object:
     dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
       '@unison/dds-base':
         specifier: workspace:^
         version: link:../dds-base

@@ -17,9 +17,6 @@
   "references": [
     {
       "path": "../dds-base/tsconfig.lib.json"
-    },
-    {
-      "path": "../client-definitions/tsconfig.lib.json"
     }
   ],
   "exclude": [
