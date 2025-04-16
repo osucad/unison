@@ -4,13 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../dds-base"
-    },
-    {
       "path": "../client-definitions"
     },
     {
-      "path": "../protocol"
+      "path": "../dds-base"
     },
     {
       "path": "./tsconfig.lib.json"

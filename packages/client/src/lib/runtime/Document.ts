@@ -1,7 +1,7 @@
 import { DocumentEntrypoint } from "../client/DocumentSchema.js";
-import { DDSFactory } from "../dds/DDSFactory.js";
+import { DDSFactory } from "@unison/dds-base";
 import { DDSTypeRegistry } from "./DDSTypeRegistry.js";
-import { IDocumentSummary } from "./Summary.js";
+import { IDocumentSummary } from "@unison/client-definitions";
 import { UnisonRuntime } from "./UnisonRuntime.js";
 
 export interface IDocumentOptions {

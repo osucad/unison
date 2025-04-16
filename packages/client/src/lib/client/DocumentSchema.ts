@@ -1,5 +1,4 @@
-import { DDS } from "../dds/DDS.js";
-import { DDSClass, DDSFactory, DDSFactoryOrClass, normalizeDDSFactory } from "../dds/DDSFactory.js";
+import { DDS, DDSClass, DDSFactory, DDSFactoryOrClass, normalizeDDSFactory } from "@unison/dds-base";
 
 export type DocumentSchema = Record<string, DDSFactoryOrClass>
 

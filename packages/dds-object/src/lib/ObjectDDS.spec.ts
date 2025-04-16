@@ -1,10 +1,13 @@
 import { ObjectDDS } from './ObjectDDS.js';
-import { DDSAttributes } from "../DDS.js";
 import { property } from "./decorator.js";
 import { expect } from "vitest";
-import { UnisonRuntime } from "../../runtime/UnisonRuntime.js";
-import { normalizeDDSFactory } from "../DDSFactory.js";
-import { DDSTypeRegistry } from "../../runtime/DDSTypeRegistry.js";
+import { DDSAttributes, IDocumentSummary, IUnisonRuntime } from '@unison/client-definitions';
+
+class TestRuntime implements IUnisonRuntime {
+  createSummary(): IDocumentSummary {
+    throw new Error('Method not implemented.');
+  }
+}
 
 class TestObject extends ObjectDDS {
   public static readonly attributes: DDSAttributes = {
@@ -41,9 +44,7 @@ describe("ObjectDDS", () => {
 
     expect(object.kernel.getPendingState('foo')).toBe(false);
 
-    const runtime = new UnisonRuntime({}, new DDSTypeRegistry([normalizeDDSFactory(TestObject)]));
-
-    runtime.attach(object);
+    object.attach('foo', new TestRuntime());
 
     object.foo = 'foo';
 

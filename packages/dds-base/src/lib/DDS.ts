@@ -1,6 +1,5 @@
+import { DDSAttributes, IUnisonRuntime } from "@unison/client-definitions";
 import { EventEmitter } from "eventemitter3";
-import { UnisonRuntime } from "../runtime/UnisonRuntime.js";
-import { DDSAttributes } from "@unison/client-definitions";
 
 export interface DDSEvents {
   attach(): void;
@@ -9,20 +8,22 @@ export interface DDSEvents {
 }
 
 export abstract class DDS extends EventEmitter<DDSEvents> {
-  protected constructor(
-      readonly attributes: DDSAttributes,
-  ) {
+  protected constructor(readonly attributes: DDSAttributes) {
     super();
   }
 
   private _id: string | null = null;
-  private _runtime?: UnisonRuntime;
+  private _runtime?: IUnisonRuntime;
 
-  get id(): string | null {
+  public get id(): string | null {
     return this._id;
   }
 
-  attach(id: string, runtime: UnisonRuntime) {
+  public get isAttached() {
+    return !!this._runtime;
+  }
+
+  public attach(id: string, runtime: IUnisonRuntime) {
     if (this.isAttached)
       throw new Error("Already attached");
 
@@ -31,7 +32,7 @@ export abstract class DDS extends EventEmitter<DDSEvents> {
     this.emit('attach');
   }
 
-  detach() {
+  public detach() {
     if (!this.isAttached)
       return;
 
@@ -40,11 +41,7 @@ export abstract class DDS extends EventEmitter<DDSEvents> {
     this.emit('detach');
   }
 
-  get isAttached() {
-    return !!this._runtime;
-  }
+  public abstract createSummary(): unknown;
 
-  abstract createSummary(): unknown;
-
-  abstract load(contents: unknown): void;
+  public abstract load(contents: unknown): void;
 }

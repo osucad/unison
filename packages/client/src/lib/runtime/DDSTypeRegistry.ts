@@ -1,17 +1,17 @@
-import { DDSAttributes } from "../dds/DDS.js";
-import { DDSFactory } from "../dds/DDSFactory.js";
+import { DDSAttributes } from "@unison/client-definitions";
+import { DDSFactory } from "@unison/dds-base";
 
 export class DDSTypeRegistry {
-  private readonly registry = new Map<string, DDSFactory>()
+  private readonly registry = new Map<string, DDSFactory>();
 
   constructor(
-      factories: readonly DDSFactory[]
+      factories: readonly DDSFactory[],
   ) {
     for (const factory of factories)
-      this.registry.set(factory.attributes.type, factory)
+      this.registry.set(factory.attributes.type, factory);
   }
 
   resolve(attributes: DDSAttributes) {
-    return this.registry.get(attributes.type)
+    return this.registry.get(attributes.type);
   }
 }

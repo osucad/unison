@@ -14,6 +14,15 @@
     },
     {
       "path": "./packages/client-definitions"
+    },
+    {
+      "path": "./packages/dds-base"
+    },
+    {
+      "path": "./packages/dds-object"
+    },
+    {
+      "path": "./packages/dds-counter"
     }
   ]
 }

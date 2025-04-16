@@ -10,9 +10,6 @@
       "path": "../client-definitions"
     },
     {
-      "path": "../protocol"
-    },
-    {
       "path": "./tsconfig.lib.json"
     },
     {

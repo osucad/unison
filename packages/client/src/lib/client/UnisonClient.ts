@@ -1,4 +1,4 @@
-import { DDSFactory, DDSFactoryOrClass, normalizeDDSFactory } from "../dds/DDSFactory.js";
+import { DDSFactory, DDSFactoryOrClass, normalizeDDSFactory } from "@unison/dds-base";
 import { Document, IDocumentOptions } from "../runtime/Document.js";
 import { DocumentSchema, normalizeDocumentSchema, UnwrapDocumentSchema } from "./DocumentSchema.js";
 import { ITokenProvider } from "./ITokenProvider.js";

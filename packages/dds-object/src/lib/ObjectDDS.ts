@@ -1,4 +1,5 @@
-import { DDS, DDSAttributes } from "../DDS.js";
+import { DDSAttributes } from "@unison/client-definitions";
+import { DDS } from "@unison/dds-base";
 import { IObjectDDSSummary, ObjectDDSKernel } from "./ObjectDDSKernel.js";
 import { toProxy } from "./proxy.js";
 
@@ -13,7 +14,7 @@ export abstract class ObjectDDS extends DDS {
 
     this.kernel = new ObjectDDSKernel(this);
 
-    return toProxy(this)
+    return toProxy(this);
   }
 
   public override createSummary(): unknown {

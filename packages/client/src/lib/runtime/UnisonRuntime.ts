@@ -1,5 +1,4 @@
-import { DDS } from "../dds/DDS.js";
-import { DDSFactory } from "../dds/DDSFactory.js";
+import { DDS, DDSFactory } from "@unison/dds-base";
 import { nn } from "../util/nn.js";
 import { DDSTypeRegistry } from "./DDSTypeRegistry.js";
 import { IDocumentSummary, IObjectSummary, IUnisonRuntime } from "@unison/client-definitions";

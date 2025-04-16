@@ -1,4 +1,5 @@
-import { DDS, DDSAttributes } from "../DDS.js";
+import { DDSAttributes } from "@unison/client-definitions";
+import { DDS } from "@unison/dds-base";
 
 export interface ICounterSummary {
   value: number;
@@ -6,8 +7,8 @@ export interface ICounterSummary {
 
 export class Counter extends DDS {
   static readonly attributes: DDSAttributes = {
-    type: '@unison/counter'
-  }
+    type: '@unison/counter',
+  };
 
   constructor() {
     super(Counter.attributes);
@@ -16,7 +17,7 @@ export class Counter extends DDS {
   private _value = 0;
 
   get value() {
-    return this._value
+    return this._value;
   }
 
   set value(value) {
@@ -32,12 +33,12 @@ export class Counter extends DDS {
   }
 
   public override createSummary(): ICounterSummary {
-    return { value: this._value }
+    return { value: this._value };
   }
 
   public override load(contents: unknown) {
-    const { value } = contents as ICounterSummary
+    const { value } = contents as ICounterSummary;
 
-    this._value = value
+    this._value = value;
   }
 }

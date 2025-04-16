@@ -1,5 +1,5 @@
 {
-  "name": "@unison/client",
+  "name": "@unison/dds-object",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -19,12 +19,10 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@unison/protocol": "workspace:^",
-    "axios": "^1.6.0",
-    "eventemitter3": "^5.0.1",
-    "socket.io-client": "^4.8.1",
+    "tslib": "^2.3.0",
+    "@unison/dds-base": "workspace:^",
     "@unison/client-definitions": "workspace:^",
-    "@unison/dds-base": "workspace:^"
+    "reflect-metadata": "^0.2.2"
   },
   "nx": {
     "tags": [

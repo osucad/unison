@@ -5,26 +5,21 @@
     "rootDir": "src",
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
     "types": [
-      "node",
-      "vite/client"
-    ],
-    "lib": ["DOM", "ESNext"]
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts"
   ],
   "references": [
     {
-      "path": "../dds-base/tsconfig.lib.json"
-    },
-    {
       "path": "../client-definitions/tsconfig.lib.json"
     },
     {
-      "path": "../protocol/tsconfig.lib.json"
+      "path": "../dds-base/tsconfig.lib.json"
     }
   ],
   "exclude": [
