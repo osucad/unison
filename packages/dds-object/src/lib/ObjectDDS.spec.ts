@@ -1,6 +1,5 @@
 import { ObjectDDS } from "./ObjectDDS.js";
 import { property } from "./decorator.js";
-import { expect } from "vitest";
 import { DDSAttributes } from "@unison/client-definitions";
 import { TestRuntime } from "@unison/client-test-utils";
 
