@@ -7,7 +7,7 @@ export function requireDocumentScopes(
 {
   return (req: Request, res: Response, next: () => void) => 
   {
-    if (verifyToken(req, tokenVerifier, req.params.documentId, scopes))
+    if (isTokenValid(req, tokenVerifier, req.params.documentId, scopes))
       next();
     else
       res.sendStatus(401);
@@ -20,28 +20,26 @@ export function requireScopes(
 {
   return (req: Request, res: Response, next: () => void) => 
   {
-    if (verifyToken(req, tokenVerifier, undefined, scopes))
+    if (isTokenValid(req, tokenVerifier, undefined, scopes))
       next();
     else
       res.sendStatus(401);
   };
 }
 
-function verifyToken(
+function isTokenValid(
   req: Request,
   tokenVerifier: ITokenVerifier,
   documentId: string | undefined,
-  scopes: string[],
+  requiredScopes: string[],
 ): boolean 
 {
   const bearerToken = req.headers.authorization?.startsWith("Bearer ")
     ? req.headers.authorization.substring("Bearer ".length)
     : undefined;
 
-  if (!bearerToken) 
-  {
+  if (!bearerToken)
     return false;
-  }
 
   const result = tokenVerifier.verifyToken(bearerToken);
 
@@ -53,12 +51,5 @@ function verifyToken(
   if (documentId !== undefined && token.documentId !== documentId)
     return false;
 
-  for (const scope of scopes) 
-  {
-    if (!token.scopes.includes(scope))
-      return false;
-
-  }
-
-  return true;
+  return requiredScopes.every(scope => token.scopes.includes(scope));
 }
