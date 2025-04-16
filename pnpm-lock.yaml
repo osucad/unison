@@ -184,18 +184,12 @@ importers:
 
   packages/client-test-utils:
     dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
 
   packages/dds-base:
     dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -205,9 +199,6 @@ importers:
 
   packages/dds-counter:
     dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
       '@unison/dds-base':
         specifier: workspace:^
         version: link:../dds-base
