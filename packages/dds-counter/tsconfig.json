@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../client-definitions"
+    },
+    {
       "path": "../dds-base"
     },
     {

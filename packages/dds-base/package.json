@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "tslib": "^2.3.0",
+    "@unison/client-definitions": "workspace:^",
     "eventemitter3": "^5.0.1"
   },
   "nx": {

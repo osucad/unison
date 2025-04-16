@@ -16,6 +16,9 @@
   ],
   "references": [
     {
+      "path": "../client-definitions/tsconfig.lib.json"
+    },
+    {
       "path": "../dds-base/tsconfig.lib.json"
     }
   ],
