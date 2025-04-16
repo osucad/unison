@@ -1,13 +1,19 @@
 import { DDS, DDSAttributes } from "../DDS.js";
 import { IObjectDDSSummary, ObjectDDSKernel } from "./ObjectDDSKernel.js";
+import { toProxy } from "./proxy.js";
 
 export abstract class ObjectDDS extends DDS {
-  private readonly kernel: ObjectDDSKernel
+  /**
+   * @internal
+   */
+  readonly kernel: ObjectDDSKernel;
 
   protected constructor(attributes: DDSAttributes) {
     super(attributes);
 
-    this.kernel = new ObjectDDSKernel(this)
+    this.kernel = new ObjectDDSKernel(this);
+
+    return toProxy(this)
   }
 
   public override createSummary(): unknown {
@@ -15,6 +21,6 @@ export abstract class ObjectDDS extends DDS {
   }
 
   public override load(contents: unknown) {
-    this.kernel.load(contents as IObjectDDSSummary)
+    this.kernel.load(contents as IObjectDDSSummary);
   }
 }

@@ -39,7 +39,7 @@ export class UnisonRuntime {
     }
   }
 
-  private attach(dds: DDS) {
+  attach(dds: DDS) {
     if (dds.isAttached)
       return
 
