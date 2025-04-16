@@ -14,7 +14,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
   meta: {
     docs: {
       description:
-          "Not handling neverthrow result is a possible error because errors could remain unhandled.",
+          "Not handling neverthrow results is a possible error because errors could remain unhandled.",
     },
     messages: {
       [MessageIds.MUST_USE]: "Result must be handled.",
