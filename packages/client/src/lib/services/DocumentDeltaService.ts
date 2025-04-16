@@ -1,4 +1,4 @@
-import { ISequencedDocumentMessage } from "@unison/protocol";
+import { ISequencedDocumentMessage } from "@unison/shared-definitions";
 import { DeltaService } from "./DeltaService.js";
 import { IDocumentDeltaService } from "@unison/client-definitions";
 

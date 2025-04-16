@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "tslib": "^2.3.0",
-    "@unison/protocol": "workspace:^"
+    "@unison/shared-definitions": "workspace:^"
   },
   "nx": {
     "tags": [

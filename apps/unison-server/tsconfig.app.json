@@ -19,7 +19,7 @@
   ],
   "references": [
     {
-      "path": "../../packages/protocol/tsconfig.lib.json"
+      "path": "../../packages/shared-definitions/tsconfig.lib.json"
     }
   ]
 }

@@ -7,7 +7,7 @@
       "path": "./apps/unison-server"
     },
     {
-      "path": "./packages/protocol"
+      "path": "./packages/shared-definitions"
     },
     {
       "path": "./packages/client"

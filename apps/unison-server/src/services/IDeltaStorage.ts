@@ -1,4 +1,4 @@
-import { ISequencedDocumentMessage } from "@unison/protocol";
+import { ISequencedDocumentMessage } from "@unison/shared-definitions";
 
 export interface IDeltaStorage 
 {

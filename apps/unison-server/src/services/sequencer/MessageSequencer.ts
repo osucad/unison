@@ -1,4 +1,4 @@
-import { DocumentOperation, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/protocol";
+import { DocumentOperation, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
 import { ClientManager } from "../../multiplayer/ClientManager";
 import { IProducer } from "../../multiplayer/IProducer";
 

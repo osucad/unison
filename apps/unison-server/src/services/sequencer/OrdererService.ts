@@ -1,4 +1,4 @@
-import { ISequencedDocumentMessage } from "@unison/protocol";
+import { ISequencedDocumentMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { IProducer } from "../../multiplayer/IProducer";
 import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";

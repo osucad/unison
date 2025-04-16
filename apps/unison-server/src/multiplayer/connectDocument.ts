@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { ClientMessages, ConnectDocumentFailure, IConnect, invalidToken, MessageType, PROTOCOL_VERSION, ScopeTypes, ServerMessages, versionMismatch } from "@unison/protocol";
+import { ClientMessages, ConnectDocumentFailure, IConnect, invalidToken, MessageType, PROTOCOL_VERSION, ScopeTypes, ServerMessages, versionMismatch } from "@unison/shared-definitions";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
 import { err, ok, Result } from "neverthrow";
 import { OrdererConnection } from "../services/sequencer/OrdererConnection";

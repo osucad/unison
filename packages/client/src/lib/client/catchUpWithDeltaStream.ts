@@ -1,4 +1,4 @@
-import { ClientMessages, IDocumentSummary, ISequencedDocumentMessage, ServerMessages } from "@unison/protocol";
+import { ClientMessages, IDocumentSummary, ISequencedDocumentMessage, ServerMessages } from "@unison/shared-definitions";
 import { Socket } from "socket.io-client";
 import { Deferred } from "../util/deferred.js";
 import { DocumentDeltaService } from "../services/DocumentDeltaService.js";

@@ -1,4 +1,4 @@
-import { ScopeTypes } from "@unison/protocol";
+import { ScopeTypes } from "@unison/shared-definitions";
 import { Axios } from "axios";
 import { ITokenProvider } from "../client/ITokenProvider.js";
 import { IDocumentStorageService, IDocumentSummary } from "@unison/client-definitions";

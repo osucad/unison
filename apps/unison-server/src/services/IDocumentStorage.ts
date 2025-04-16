@@ -1,4 +1,4 @@
-import { IDocumentSummary } from "@unison/protocol";
+import { IDocumentSummary } from "@unison/shared-definitions";
 
 export interface IDocumentStorage 
 {

@@ -1,4 +1,4 @@
-import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/protocol";
+import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/shared-definitions";
 import { Server, Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
 import { OrdererConnection } from "../services/sequencer/OrdererConnection";

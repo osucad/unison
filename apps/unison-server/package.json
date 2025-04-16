@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.9",
-    "@unison/protocol": "workspace:^",
+    "@unison/shared-definitions": "workspace:^",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "eventemitter3": "^5.0.1",

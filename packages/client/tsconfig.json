@@ -10,7 +10,7 @@
       "path": "../dds-base"
     },
     {
-      "path": "../protocol"
+      "path": "../shared-definitions"
     },
     {
       "path": "./tsconfig.lib.json"

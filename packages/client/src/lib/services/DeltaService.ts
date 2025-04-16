@@ -1,4 +1,4 @@
-import { ISequencedDocumentMessage, ScopeTypes } from "@unison/protocol";
+import { ISequencedDocumentMessage, ScopeTypes } from "@unison/shared-definitions";
 import { Axios } from "axios";
 import { ITokenProvider } from "../client/ITokenProvider.js";
 import { IDeltaService } from "@unison/client-definitions";

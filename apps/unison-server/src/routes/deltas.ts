@@ -1,4 +1,4 @@
-import { ScopeTypes } from "@unison/protocol";
+import { ScopeTypes } from "@unison/shared-definitions";
 import { Router } from "express";
 import { requireDocumentScopes } from "../middlewares/scopes";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";

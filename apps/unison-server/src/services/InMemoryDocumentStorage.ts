@@ -1,4 +1,4 @@
-import { IDocumentSummary } from "@unison/protocol";
+import { IDocumentSummary } from "@unison/shared-definitions";
 import { randomUUID } from "node:crypto";
 import { IDocumentStorage } from "./IDocumentStorage";
 

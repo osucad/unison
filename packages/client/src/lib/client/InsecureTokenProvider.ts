@@ -1,5 +1,5 @@
 import { ITokenProvider, ITokenResult } from "./ITokenProvider.js";
-import { IToken, IUser } from "@unison/protocol";
+import { IToken, IUser } from "@unison/shared-definitions";
 
 export class InsecureTokenProvider implements ITokenProvider 
 {

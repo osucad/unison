@@ -1,4 +1,4 @@
-import { IToken } from "@unison/protocol";
+import { IToken } from "@unison/shared-definitions";
 import { Result } from "neverthrow";
 
 export interface ITokenVerifier 
