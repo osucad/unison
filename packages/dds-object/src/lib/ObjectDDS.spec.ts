@@ -1,15 +1,8 @@
 import { ObjectDDS } from './ObjectDDS.js';
 import { property } from "./decorator.js";
 import { expect } from "vitest";
-import { DDSAttributes, IDocumentSummary, IUnisonRuntime } from '@unison/client-definitions';
-
-class TestRuntime implements IUnisonRuntime 
-{
-  createSummary(): IDocumentSummary 
-  {
-    throw new Error('Method not implemented.');
-  }
-}
+import { DDSAttributes } from "@unison/client-definitions";
+import { TestRuntime } from "@unison/client-test-utils";
 
 class TestObject extends ObjectDDS 
 {

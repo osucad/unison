@@ -20,6 +20,9 @@
     },
     {
       "path": "../dds-base/tsconfig.lib.json"
+    },
+    {
+      "path": "../client-test-utils/tsconfig.lib.json"
     }
   ],
   "exclude": [

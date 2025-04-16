@@ -23,6 +23,9 @@
     },
     {
       "path": "./packages/dds-counter"
+    },
+    {
+      "path": "./packages/client-test-utils"
     }
   ]
 }

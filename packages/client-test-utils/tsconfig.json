@@ -7,16 +7,7 @@
       "path": "../client-definitions"
     },
     {
-      "path": "../dds-base"
-    },
-    {
-      "path": "../client-test-utils"
-    },
-    {
       "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
   ]
 }

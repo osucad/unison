@@ -1,6 +1,7 @@
 {
-  "name": "@unison/dds-object",
+  "name": "@unison/client-test-utils",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -14,22 +15,11 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "!**/*.tsbuildinfo"
-  ],
   "dependencies": {
     "tslib": "^2.3.0",
-    "@unison/dds-base": "workspace:^",
-    "@unison/client-definitions": "workspace:^",
-    "reflect-metadata": "^0.2.2"
-  },
-  "devDependencies": {
-    "@unison/client-test-utils": "workspace:^"
+    "@unison/client-definitions": "workspace:^"
   },
   "nx": {
-    "tags": [
-      "scope:client"
-    ]
+    "tags": ["scope:client"]
   }
 }
