@@ -169,9 +169,6 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.8.4
-      eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1(bufferutil@4.0.1)(utf-8-validate@6.0.5)

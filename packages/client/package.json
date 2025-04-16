@@ -21,7 +21,6 @@
   "dependencies": {
     "@unison/protocol": "workspace:^",
     "axios": "^1.6.0",
-    "eventemitter3": "^5.0.1",
     "socket.io-client": "^4.8.1",
     "@unison/client-definitions": "workspace:^",
     "@unison/dds-base": "workspace:^"
