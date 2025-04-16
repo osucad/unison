@@ -1,8 +1,10 @@
 import { ITokenProvider, ITokenResult } from "./ITokenProvider.js";
-import { IToken, IUser } from "@unison/protocol"
+import { IToken, IUser } from "@unison/protocol";
 
-export class InsecureTokenProvider implements ITokenProvider {
-  async getToken(documentId: string | undefined, scopes: string[]): Promise<ITokenResult> {
+export class InsecureTokenProvider implements ITokenProvider 
+{
+  async getToken(documentId: string | undefined, scopes: string[]): Promise<ITokenResult> 
+  {
     const token: IToken = {
       documentId,
       scopes,
@@ -10,10 +12,10 @@ export class InsecureTokenProvider implements ITokenProvider {
         id: 'dummy-user',
         username: 'testuser'
       } as IUser
-    }
+    };
 
     return {
       token: JSON.stringify({ insecureToken: token })
-    }
+    };
   }
 }

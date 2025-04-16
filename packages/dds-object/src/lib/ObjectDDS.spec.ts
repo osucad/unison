@@ -3,18 +3,22 @@ import { property } from "./decorator.js";
 import { expect } from "vitest";
 import { DDSAttributes, IDocumentSummary, IUnisonRuntime } from '@unison/client-definitions';
 
-class TestRuntime implements IUnisonRuntime {
-  createSummary(): IDocumentSummary {
+class TestRuntime implements IUnisonRuntime 
+{
+  createSummary(): IDocumentSummary 
+  {
     throw new Error('Method not implemented.');
   }
 }
 
-class TestObject extends ObjectDDS {
+class TestObject extends ObjectDDS 
+{
   public static readonly attributes: DDSAttributes = {
     type: 'test',
   };
 
-  constructor() {
+  constructor() 
+  {
     super(TestObject.attributes);
   }
 
@@ -22,14 +26,17 @@ class TestObject extends ObjectDDS {
   foo = 'bar';
 }
 
-describe("ObjectDDS", () => {
-  it("creates valid summary", () => {
+describe("ObjectDDS", () => 
+{
+  it("creates valid summary", () => 
+  {
     const object = new TestObject();
 
     expect(object.createSummary()).toEqual({ foo: 'bar' });
   });
 
-  it("initializes from summary", () => {
+  it("initializes from summary", () => 
+  {
     const object = new TestObject();
 
     object.load({ foo: 'baz' });
@@ -37,7 +44,8 @@ describe("ObjectDDS", () => {
     expect(object.foo).toBe('baz');
   });
 
-  it("marks changed properties as pending when in attached state", () => {
+  it("marks changed properties as pending when in attached state", () => 
+  {
     const object = new TestObject();
 
     object.foo = 'baz';

@@ -1,3 +1,4 @@
-export interface DDSAttributes {
+export interface DDSAttributes 
+{
   readonly type: string;
 }

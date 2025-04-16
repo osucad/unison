@@ -1,64 +1,72 @@
-export interface IConnect {
-  version: string
-  documentId: string
-  token: string
+export interface IConnect 
+{
+  version: string;
+  documentId: string;
+  token: string;
 }
 
-export type ConnectDocumentResult = ConnectDocumentSuccess | ConnectDocumentFailure
+export type ConnectDocumentResult = ConnectDocumentSuccess | ConnectDocumentFailure;
 
-export interface ConnectDocumentSuccess {
-  success: true
+export interface ConnectDocumentSuccess 
+{
+  success: true;
 }
 
 export type ConnectDocumentFailure =
     | VersionMismatch
     | InvalidToken
-    | AlreadyConnected
+    | AlreadyConnected;
 
-export interface VersionMismatch {
-  success: false
-  error: 'Version mismatch'
+export interface VersionMismatch 
+{
+  success: false;
+  error: 'Version mismatch';
   detail: {
-    expectedVersion: string
-  }
+    expectedVersion: string;
+  };
 }
 
-export function versionMismatch(expectedVersion: string): VersionMismatch {
+export function versionMismatch(expectedVersion: string): VersionMismatch 
+{
   return {
     success: false,
     error: "Version mismatch",
     detail: {
       expectedVersion,
     },
-  }
+  };
 }
 
-export interface InvalidToken {
-  success: false
-  error: 'Invalid token'
+export interface InvalidToken 
+{
+  success: false;
+  error: 'Invalid token';
 }
 
-export function invalidToken(): InvalidToken {
+export function invalidToken(): InvalidToken 
+{
   return {
     success: false,
     error: 'Invalid token',
-  }
+  };
 }
 
-export interface AlreadyConnected {
-  success: false
-  error: 'Already connected'
+export interface AlreadyConnected 
+{
+  success: false;
+  error: 'Already connected';
   detail: {
-    documentId: string,
-  }
+    documentId: string;
+  };
 }
 
-export function alreadyConnected(documentId: string): AlreadyConnected {
+export function alreadyConnected(documentId: string): AlreadyConnected 
+{
   return {
     success: false,
     error: 'Already connected',
     detail: {
       documentId,
     },
-  }
+  };
 }

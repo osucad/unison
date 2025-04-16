@@ -1,3 +1,4 @@
-export interface IDocumentSummary {
-  readonly sequenceNumber: number
+export interface IDocumentSummary 
+{
+  readonly sequenceNumber: number;
 }

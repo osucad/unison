@@ -2,17 +2,20 @@ import { ISequencedDocumentMessage, ScopeTypes } from "@unison/protocol";
 import { Axios } from "axios";
 import { ITokenProvider } from "../client/ITokenProvider.js";
 
-export class DeltaService {
+export class DeltaService 
+{
   constructor(
-      private readonly axios: Axios,
-      private readonly tokenProvider: ITokenProvider
-  ) {
+    private readonly axios: Axios,
+    private readonly tokenProvider: ITokenProvider
+  ) 
+  {
   }
 
-  async getDeltas(documentId: string, first: number, last?: number) {
-    const { axios, tokenProvider } = this
+  async getDeltas(documentId: string, first: number, last?: number) 
+  {
+    const { axios, tokenProvider } = this;
 
-    const { token } = await tokenProvider.getToken(documentId, [ScopeTypes.Read])
+    const { token } = await tokenProvider.getToken(documentId, [ScopeTypes.Read]);
 
     const response = await axios.get<ISequencedDocumentMessage[]>(`/deltas/${documentId}`, {
       params: {

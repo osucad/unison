@@ -4,92 +4,107 @@ import { IProducer } from "../../multiplayer/IProducer";
 import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";
 import { OrdererConnection } from "./OrdererConnection";
 
-export interface OrdererServiceEvents {
-  deltasProduced: (documentId: string, deltas: ISequencedDocumentMessage[]) => void
-  stop: () => void
+export interface OrdererServiceEvents 
+{
+  deltasProduced: (documentId: string, deltas: ISequencedDocumentMessage[]) => void;
+  stop: () => void;
 }
 
-export class OrdererService extends EventEmitter<OrdererServiceEvents> {
-  private readonly sequencers = new Map<string, MessageSequencer>()
+export class OrdererService extends EventEmitter<OrdererServiceEvents> 
+{
+  private readonly sequencers = new Map<string, MessageSequencer>();
 
-  private messageBuffer: [string, RawOperationMessage][] = []
+  private messageBuffer: [string, RawOperationMessage][] = [];
 
-  private started = false
+  private started = false;
 
-  start() {
+  start() 
+  {
     if (this.started)
-      return
+      return;
 
-    const interval = setInterval(() => this.poll(), 50)
+    const interval = setInterval(() => this.poll(), 50);
 
-    this.once('stop', () => clearInterval(interval))
+    this.once('stop', () => clearInterval(interval));
 
-    this.started = true
+    this.started = true;
   }
 
-  stop() {
+  stop() 
+  {
     if (!this.started)
-      return
+      return;
 
-    this.emit('stop')
+    this.emit('stop');
 
-    this.started = false
+    this.started = false;
   }
 
-  private poll() {
-    const messages = this.messageBuffer
-    this.messageBuffer = []
+  private poll() 
+  {
+    const messages = this.messageBuffer;
+    this.messageBuffer = [];
 
-    const groupedMessages = new Map<string, RawOperationMessage[]>()
+    const groupedMessages = new Map<string, RawOperationMessage[]>();
 
-    for (const [documentId, message] of messages) {
+    for (const [documentId, message] of messages) 
+    {
       if (!groupedMessages.has(documentId))
-        groupedMessages.set(documentId, [])
+        groupedMessages.set(documentId, []);
 
-      groupedMessages.get(documentId)!.push(message)
+      groupedMessages.get(documentId)!.push(message);
     }
 
-    for (const [documentId, messages] of groupedMessages) {
-      this.getSequencer(documentId).process(messages)
+    for (const [documentId, messages] of groupedMessages) 
+    {
+      this.getSequencer(documentId).process(messages);
     }
   }
 
-  getConnection(documentId: string): OrdererConnection {
-    return new OrdererConnection(message => {
-      this.messageBuffer.push([documentId, message])
-    })
+  getConnection(documentId: string): OrdererConnection 
+  {
+    return new OrdererConnection(message => 
+    {
+      this.messageBuffer.push([documentId, message]);
+    });
   }
 
-  private getSequencer(documentId: string) {
-    let sequencer = this.sequencers.get(documentId)
+  private getSequencer(documentId: string) 
+  {
+    let sequencer = this.sequencers.get(documentId);
 
     if (!sequencer)
-      sequencer = this.createSequencer(documentId)
+      sequencer = this.createSequencer(documentId);
 
-    return sequencer
+    return sequencer;
   }
 
-  private createSequencer(documentId: string) {
-    const sequencer = new MessageSequencer(documentId, new DeltaProducer(documentId, this.onMessagesProduced))
+  private createSequencer(documentId: string) 
+  {
+    const sequencer = new MessageSequencer(documentId, new DeltaProducer(documentId, this.onMessagesProduced));
 
-    this.sequencers.set(documentId, sequencer)
+    this.sequencers.set(documentId, sequencer);
 
-    return sequencer
+    return sequencer;
   }
 
-  private onMessagesProduced = (messages: ISequencedDocumentMessage[], documentId: string) => {
-    this.emit('deltasProduced', documentId, messages)
-  }
+  private onMessagesProduced = (messages: ISequencedDocumentMessage[], documentId: string) => 
+  {
+    this.emit('deltasProduced', documentId, messages);
+  };
 }
 
-export class DeltaProducer implements IProducer<ISequencedDocumentMessage> {
+export class DeltaProducer implements IProducer<ISequencedDocumentMessage> 
+{
   constructor(
-      readonly documentId: string,
-      readonly onMessagesProduced: (messages: ISequencedDocumentMessage[], documentId: string) => void
-  ) {
+    readonly documentId: string,
+    readonly onMessagesProduced: (messages: ISequencedDocumentMessage[], documentId: string) => void
+  ) 
+  {
   }
 
-  send(messages: ISequencedDocumentMessage[]): void {
-    this.onMessagesProduced(messages, this.documentId)
+  send(messages: ISequencedDocumentMessage[]): void 
+  {
+    this.onMessagesProduced(messages, this.documentId);
   }
 }

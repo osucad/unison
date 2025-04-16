@@ -1,7 +1,9 @@
 import { Counter } from './Counter.js';
 
-describe("Counter", () => {
-  it("creates valid summary", () => {
+describe("Counter", () => 
+{
+  it("creates valid summary", () => 
+  {
     const counter = new Counter();
 
     counter.value = 3;
@@ -13,7 +15,8 @@ describe("Counter", () => {
     expect(counter.createSummary()).toStrictEqual({ value: -20 });
   });
 
-  it("initializes from summary", () => {
+  it("initializes from summary", () => 
+  {
     const counter = new Counter();
 
     counter.load({ value: 5 });

@@ -6,58 +6,70 @@ import { connectDocument } from "./connectDocument";
 import { broadcastMessages } from "./messageBroadcaster";
 
 export function handleWebSockets(
-    io: Server<ClientMessages, ServerMessages>,
-    resources: IUnisonServerResources,
-) {
-  broadcastMessages(resources, io)
+  io: Server<ClientMessages, ServerMessages>,
+  resources: IUnisonServerResources,
+) 
+{
+  broadcastMessages(resources, io);
 
-  io.on('connect', async client => {
-    handleConnection(client, resources)
-  })
+  io.on('connect', async client => 
+  {
+    handleConnection(client, resources);
+  });
 }
 
 function handleConnection(
-    client: Socket<ClientMessages, ServerMessages>,
-    resources: IUnisonServerResources,
-) {
-  const connectionMap = new Map<string, OrdererConnection>()
-  const connecting = new Set<string>()
+  client: Socket<ClientMessages, ServerMessages>,
+  resources: IUnisonServerResources,
+) 
+{
+  const connectionMap = new Map<string, OrdererConnection>();
+  const connecting = new Set<string>();
 
-  client.on('connectDocument', async (options, callback) => {
-    if (connecting.has(options.documentId) || connectionMap.has(options.documentId)) {
-      callback(alreadyConnected(options.documentId))
-      return
+  client.on('connectDocument', async (options, callback) => 
+  {
+    if (connecting.has(options.documentId) || connectionMap.has(options.documentId)) 
+    {
+      callback(alreadyConnected(options.documentId));
+      return;
     }
 
-    try {
-      connecting.add(options.documentId)
-      const result = await connectDocument(client, options, resources)
+    try 
+    {
+      connecting.add(options.documentId);
+      const result = await connectDocument(client, options, resources);
 
-      if (result.isErr()) {
-        callback(result.error)
-        return
+      if (result.isErr()) 
+      {
+        callback(result.error);
+        return;
       }
 
-      if (!client.connected) {
-        cleanupConnection(options.documentId, result.value)
-        return
+      if (!client.connected) 
+      {
+        cleanupConnection(options.documentId, result.value);
+        return;
       }
 
-      const connection = result.value
+      const connection = result.value;
 
-      connectionMap.set(options.documentId, connection)
+      connectionMap.set(options.documentId, connection);
 
-      callback({ success: true })
-    } finally {
-      connecting.delete(options.documentId)
+      callback({ success: true });
     }
-  })
+    finally 
+    {
+      connecting.delete(options.documentId);
+    }
+  });
 
-  client.on('submitOps', (documentId, message) => {
-    const connection = connectionMap.get(documentId)
-    if (!connection) {
+  client.on('submitOps', (documentId, message) => 
+  {
+    const connection = connectionMap.get(documentId);
+    if (!connection) 
+    {
       // TODO: send error response
-      return
+      return;
     }
 
     if (message.type !== MessageType.Operation)
@@ -71,16 +83,18 @@ function handleConnection(
         clientSequenceNumber: message.clientSequenceNumber,
       },
       timestamp: Date.now(),
-    })
-  })
+    });
+  });
 
-  client.on('disconnect', () => {
+  client.on('disconnect', () => 
+  {
     for (const [documentId, connection] of [...connectionMap])
-      cleanupConnection(documentId, connection)
-  })
+      cleanupConnection(documentId, connection);
+  });
 
-  function cleanupConnection(documentId: string, connection: OrdererConnection) {
-    connectionMap.delete(documentId)
+  function cleanupConnection(documentId: string, connection: OrdererConnection) 
+  {
+    connectionMap.delete(documentId);
     connection.send({
       clientId: null,
       timestamp: Date.now(),
@@ -89,6 +103,6 @@ function handleConnection(
         clientSequenceNumber: -1,
         contents: { clientId: client.id }
       }
-    })
+    });
   }
 }

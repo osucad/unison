@@ -3,7 +3,8 @@ import { nn } from "../util/nn.js";
 import { DDSTypeRegistry } from "./DDSTypeRegistry.js";
 import { IDocumentSummary, IObjectSummary, IUnisonRuntime } from "@unison/client-definitions";
 
-export class UnisonRuntime implements IUnisonRuntime {
+export class UnisonRuntime implements IUnisonRuntime 
+{
   readonly rootObjects: Record<string, DDS> = {};
 
   private readonly _aliveObjects = new Map<string, DDS>();
@@ -11,10 +12,11 @@ export class UnisonRuntime implements IUnisonRuntime {
   private readonly _typeRegistry: DDSTypeRegistry;
 
   constructor(
-      schema: Record<string, DDSFactory>,
-      ddsTypeRegistry: DDSTypeRegistry,
-      summary?: IDocumentSummary,
-  ) {
+    schema: Record<string, DDSFactory>,
+    ddsTypeRegistry: DDSTypeRegistry,
+    summary?: IDocumentSummary,
+  ) 
+  {
     this._typeRegistry = ddsTypeRegistry;
 
 
@@ -26,8 +28,10 @@ export class UnisonRuntime implements IUnisonRuntime {
     Object.freeze(this.rootObjects);
   }
 
-  private createInitialState(schema: Record<string, DDSFactory>) {
-    for (const key in schema) {
+  private createInitialState(schema: Record<string, DDSFactory>) 
+  {
+    for (const key in schema) 
+    {
       const factory = schema[key];
 
       const dds = factory.createInstance();
@@ -38,7 +42,8 @@ export class UnisonRuntime implements IUnisonRuntime {
     }
   }
 
-  attach(dds: DDS) {
+  attach(dds: DDS) 
+  {
     if (dds.isAttached)
       return;
 
@@ -47,11 +52,13 @@ export class UnisonRuntime implements IUnisonRuntime {
     this._aliveObjects.set(id, dds);
   }
 
-  createSummary(): IDocumentSummary {
+  createSummary(): IDocumentSummary 
+  {
     const rootObjects: Record<string, string> = {};
     const entries: Record<string, IObjectSummary> = {};
 
-    for (const [id, dds] of this._aliveObjects) {
+    for (const [id, dds] of this._aliveObjects) 
+    {
       entries[id] = {
         attributes: structuredClone(dds.attributes),
         contents: dds.createSummary(),
@@ -67,8 +74,10 @@ export class UnisonRuntime implements IUnisonRuntime {
     };
   }
 
-  private load(schema: Record<string, DDSFactory>, summary: IDocumentSummary) {
-    for (const [key, value] of Object.entries(summary.entries)) {
+  private load(schema: Record<string, DDSFactory>, summary: IDocumentSummary) 
+  {
+    for (const [key, value] of Object.entries(summary.entries)) 
+    {
       const factory = this._typeRegistry.resolve(value.attributes);
       if (!factory)
         throw new Error(`Could not resolve dds factory for type "${value.attributes.type}"`);
@@ -76,19 +85,21 @@ export class UnisonRuntime implements IUnisonRuntime {
       this._aliveObjects.set(key, factory.createInstance());
     }
 
-    for (const [id, dds] of this._aliveObjects.entries()) {
+    for (const [id, dds] of this._aliveObjects.entries()) 
+    {
       dds.load(summary.entries[id].contents);
       dds.attach(id, this);
     }
 
-    for (const [key, factory] of Object.entries(schema)) {
+    for (const [key, factory] of Object.entries(schema)) 
+    {
       const id = nn(summary.rootObjects[key], `Missing key for "${key}" root object in summary`);
 
       const dds = nn(this._aliveObjects.get(id), `No summary for entrypoint (id="${id}", name="${key}")`);
 
       console.assert(
-          dds.attributes.type === factory.attributes.type,
-          `Incorrect type for entrypoint "${key}" (expected="${factory.attributes.type}", actual=${dds.attributes.type})`,
+        dds.attributes.type === factory.attributes.type,
+        `Incorrect type for entrypoint "${key}" (expected="${factory.attributes.type}", actual=${dds.attributes.type})`,
       );
 
       this.rootObjects[key] = dds;
@@ -96,7 +107,8 @@ export class UnisonRuntime implements IUnisonRuntime {
   }
 }
 
-function generateId() {
+function generateId() 
+{
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   let id = '';

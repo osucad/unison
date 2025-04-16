@@ -1,6 +1,7 @@
 import { IUser } from "./user";
 
-export interface IClient {
-  user: IUser
-  scopes: string[]
+export interface IClient 
+{
+  user: IUser;
+  scopes: string[];
 }

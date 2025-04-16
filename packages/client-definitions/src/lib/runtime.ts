@@ -1,5 +1,6 @@
 import { IDocumentSummary } from "./summary.js";
 
-export interface IUnisonRuntime {
+export interface IUnisonRuntime 
+{
   createSummary(): IDocumentSummary;
 }
