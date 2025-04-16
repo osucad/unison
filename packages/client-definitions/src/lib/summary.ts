@@ -1,4 +1,4 @@
-import { DDSAttributes } from "../dds/DDS.js";
+import { DDSAttributes } from "./dds.js";
 
 export interface IDocumentSummary {
   rootObjects: Record<string, string>;
@@ -6,6 +6,6 @@ export interface IDocumentSummary {
 }
 
 export interface IObjectSummary {
-  attributes: DDSAttributes
+  attributes: DDSAttributes;
   contents: unknown;
 }

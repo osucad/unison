@@ -4,16 +4,7 @@
   "include": [],
   "references": [
     {
-      "path": "../client-definitions"
-    },
-    {
-      "path": "../protocol"
-    },
-    {
       "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
   ]
 }
