@@ -11,7 +11,7 @@
       "node",
       "vite/client"
     ],
-    "lib": ["DOM"]
+    "lib": ["DOM", "ESNext"]
   },
   "include": [
     "src/**/*.ts"
