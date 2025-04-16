@@ -1,2 +1,2 @@
-export * from './lib/DDS.js';
-export * from './lib/DDSFactory.js';
+export * from "./lib/DDS.js";
+export * from "./lib/DDSFactory.js";

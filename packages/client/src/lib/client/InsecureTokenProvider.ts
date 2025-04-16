@@ -9,8 +9,8 @@ export class InsecureTokenProvider implements ITokenProvider
       documentId,
       scopes,
       user: {
-        id: 'dummy-user',
-        username: 'testuser'
+        id: "dummy-user",
+        username: "testuser"
       } as IUser
     };
 

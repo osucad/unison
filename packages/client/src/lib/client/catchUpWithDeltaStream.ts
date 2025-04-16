@@ -36,7 +36,7 @@ export async function catchUpWithDeltaStream(
     }
   }
 
-  connection.on('deltas', onDeltaReceived);
+  connection.on("deltas", onDeltaReceived);
 
   async function fetchRemainingDeltas(lastKnownSequencedNumber: number) 
   {
@@ -68,7 +68,7 @@ export async function catchUpWithDeltaStream(
     });
   }
 
-  deferred.promise.finally(() => connection.off('deltas', onDeltaReceived));
+  deferred.promise.finally(() => connection.off("deltas", onDeltaReceived));
 
   if (abortSignal)
     abortSignal.onabort = () => deferred.reject();

@@ -35,7 +35,7 @@ export abstract class DDS extends EventEmitter<DDSEvents>
 
     this._id = id;
     this._runtime = runtime;
-    this.emit('attach');
+    this.emit("attach");
   }
 
   public detach() 
@@ -45,7 +45,7 @@ export abstract class DDS extends EventEmitter<DDSEvents>
 
     this._id = null;
     this._runtime = undefined;
-    this.emit('detach');
+    this.emit("detach");
   }
 
   public abstract createSummary(): unknown;

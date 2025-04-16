@@ -1,5 +1,5 @@
 import nx from "@nx/eslint-plugin";
-import stylistic from '@stylistic/eslint-plugin'
+import stylistic from "@stylistic/eslint-plugin";
 
 export default [
   ...nx.configs["flat/base"],
@@ -71,7 +71,8 @@ export default [
       "@stylistic/indent": ["error", 2],
       "@stylistic/semi": ["error", "always"],
       "@stylistic/brace-style": ["error", "allman"],
-      "@stylistic/member-delimiter-style": ["error"]
+      "@stylistic/member-delimiter-style": ["error"],
+      "@stylistic/quotes": ["error", "double"]
     }
   }
 ];

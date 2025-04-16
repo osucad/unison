@@ -10,7 +10,7 @@ export class InMemoryDocumentStorage implements IDocumentStorage
   {
     const summaries = this.getSummaries(documentId);
 
-    if (sequenceNumber === 'latest')
+    if (sequenceNumber === "latest")
       return summaries[summaries.length - 1] ?? null;
 
     return summaries.find(it => it.sequenceNumber === sequenceNumber) ?? null;

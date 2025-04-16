@@ -34,8 +34,8 @@ function verifyToken(
   scopes: string[],
 ): boolean 
 {
-  const bearerToken = req.headers.authorization?.startsWith('Bearer ')
-    ? req.headers.authorization.substring('Bearer '.length)
+  const bearerToken = req.headers.authorization?.startsWith("Bearer ")
+    ? req.headers.authorization.substring("Bearer ".length)
     : undefined;
 
   if (!bearerToken) 

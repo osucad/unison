@@ -25,7 +25,7 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents>
 
     const interval = setInterval(() => this.poll(), 50);
 
-    this.once('stop', () => clearInterval(interval));
+    this.once("stop", () => clearInterval(interval));
 
     this.started = true;
   }
@@ -35,7 +35,7 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents>
     if (!this.started)
       return;
 
-    this.emit('stop');
+    this.emit("stop");
 
     this.started = false;
   }
@@ -90,7 +90,7 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents>
 
   private onMessagesProduced = (messages: ISequencedDocumentMessage[], documentId: string) => 
   {
-    this.emit('deltasProduced', documentId, messages);
+    this.emit("deltasProduced", documentId, messages);
   };
 }
 

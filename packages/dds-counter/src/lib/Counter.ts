@@ -9,7 +9,7 @@ export interface ICounterSummary
 export class Counter extends DDS 
 {
   static readonly attributes: DDSAttributes = {
-    type: '@unison/counter',
+    type: "@unison/counter",
   };
 
   constructor() 

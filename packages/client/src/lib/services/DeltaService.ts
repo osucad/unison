@@ -23,7 +23,7 @@ export class DeltaService
         first,
         last,
       },
-      responseType: 'json',
+      responseType: "json",
       headers: {
         Authorization: `Bearer ${token}`
       },

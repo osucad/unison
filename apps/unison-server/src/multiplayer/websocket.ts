@@ -12,7 +12,7 @@ export function handleWebSockets(
 {
   broadcastMessages(resources, io);
 
-  io.on('connect', async client => 
+  io.on("connect", async client => 
   {
     handleConnection(client, resources);
   });
@@ -26,7 +26,7 @@ function handleConnection(
   const connectionMap = new Map<string, OrdererConnection>();
   const connecting = new Set<string>();
 
-  client.on('connectDocument', async (options, callback) => 
+  client.on("connectDocument", async (options, callback) => 
   {
     if (connecting.has(options.documentId) || connectionMap.has(options.documentId)) 
     {
@@ -63,7 +63,7 @@ function handleConnection(
     }
   });
 
-  client.on('submitOps', (documentId, message) => 
+  client.on("submitOps", (documentId, message) => 
   {
     const connection = connectionMap.get(documentId);
     if (!connection) 
@@ -86,7 +86,7 @@ function handleConnection(
     });
   });
 
-  client.on('disconnect', () => 
+  client.on("disconnect", () => 
   {
     for (const [documentId, connection] of [...connectionMap])
       cleanupConnection(documentId, connection);

@@ -19,7 +19,7 @@ export function normalizeDDSFactory<T extends DDS>(
   factoryOrClass: DDSFactoryOrClass<T>,
 ): DDSFactory<T> 
 {
-  if (typeof factoryOrClass === 'function') 
+  if (typeof factoryOrClass === "function") 
   {
     return {
       attributes: factoryOrClass.attributes,

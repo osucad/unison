@@ -12,14 +12,14 @@ export class DocumentStorage
   {
   }
 
-  async getSummary(sequenceNumber: number | 'latest') 
+  async getSummary(sequenceNumber: number | "latest") 
   {
     const { documentId, axios, tokenProvider } = this;
 
     const { token } = await tokenProvider.getToken(documentId, [ScopeTypes.Read]);
 
     const response = await axios.get(`/documents/${documentId}/summary/${sequenceNumber}`, {
-      responseType: 'json',
+      responseType: "json",
       headers: {
         Authorization: `Bearer ${token}`
       }

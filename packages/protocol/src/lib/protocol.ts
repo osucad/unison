@@ -2,9 +2,9 @@ import { IClient } from "./client";
 
 export enum MessageType 
 {
-  ClientJoin = 'join',
-  ClientLeave = 'leave',
-  Operation = 'op',
+  ClientJoin = "join",
+  ClientLeave = "leave",
+  Operation = "op",
 }
 
 export interface IDocumentMessage 

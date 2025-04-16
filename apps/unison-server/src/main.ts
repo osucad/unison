@@ -23,7 +23,7 @@ async function main()
     console.log(`Listening at http://localhost:${port}`);
   });
 
-  server.on('error', console.error);
+  server.on("error", console.error);
 }
 
 main().then();

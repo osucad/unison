@@ -7,8 +7,8 @@ export function broadcastMessages(
   io: Server<ClientMessages, ServerMessages>
 ) 
 {
-  ordererService.on('deltasProduced', (documentId, deltas) => 
+  ordererService.on("deltasProduced", (documentId, deltas) => 
   {
-    io.to(documentId).emit('deltas', documentId, deltas);
+    io.to(documentId).emit("deltas", documentId, deltas);
   });
 }
