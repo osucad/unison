@@ -4,7 +4,7 @@ import { Reference, Variable } from "@typescript-eslint/scope-manager";
 import { skipChainExpression } from "../utils/skip-chain-expression";
 import ts from "typescript";
 
-export enum MessageIds 
+export enum MessageIds
 {
   MUST_USE = "mustUseResult",
   MUST_USE_RESULT_TYPE = "mustUseResultType",
@@ -25,13 +25,13 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
     hasSuggestions: true,
   },
   defaultOptions: [],
-  create(context) 
+  create(context)
   {
     const services = ESLintUtils.getParserServices(context);
     const checker = services.program.getTypeChecker();
 
     return {
-      VariableDeclarator(node) 
+      VariableDeclarator(node)
       {
         if (!node.init)
           return;
@@ -50,7 +50,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
         if (!variable)
           return;
 
-        if (isUnusedResultVariable(variable)) 
+        if (isUnusedResultVariable(variable))
         {
           context.report({
             node,
@@ -59,7 +59,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
           return;
         }
       },
-      CallExpression(node) 
+      CallExpression(node)
       {
         if (!isMemberCall(node, ["isOk", "isErr"]))
           return;
@@ -69,7 +69,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
         if (!isResultLike(tsNode))
           return;
 
-        if (node.parent.type === AST_NODE_TYPES.ExpressionStatement) 
+        if (node.parent.type === AST_NODE_TYPES.ExpressionStatement)
         {
           context.report({
             node: node,
@@ -80,14 +80,14 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
           });
         }
       },
-      ExpressionStatement(node) 
+      ExpressionStatement(node)
       {
         const expression = skipChainExpression(node.expression);
 
         if (expression.type === AST_NODE_TYPES.AssignmentExpression)
           return;
 
-        if (expression.type === AST_NODE_TYPES.UnaryExpression && expression.operator === "void")
+        if (expressionIsVoided(expression))
           return;
 
         const tsNode = services.esTreeNodeToTSNodeMap.get(expression);
@@ -103,7 +103,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
     };
 
 
-    function isResultLike(node: ts.Node, type?: ts.Type) 
+    function isResultLike(node: ts.Node, type?: ts.Type)
     {
       const resultProperties = [
         "mapErr",
@@ -117,7 +117,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
       type ??= checker.getTypeAtLocation(node);
 
       const typeParts = unionTypeParts(checker.getApparentType(type));
-      for (const ty of typeParts) 
+      for (const ty of typeParts)
       {
         if (resultProperties.every(p => ty.getProperty(p) !== undefined))
           return true;
@@ -126,19 +126,22 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
       return false;
     }
 
-    function isUnusedResultVariable(variable: Variable): boolean 
+    function isUnusedResultVariable(variable: Variable): boolean
     {
       const references = variable.references.filter(it => it.isRead() && it.isValueReference);
 
       if (references.length === 0)
         return true;
 
-      for (const reference of references) 
+      for (const reference of references)
       {
         if (isResultAssignedToOtherVariable(reference))
           return false;
 
         if (isMemberFunctionCalledOnResult(reference))
+          return false;
+
+        if (expressionIsVoided(reference.identifier))
           return false;
 
         if (reference.identifier.parent.type === AST_NODE_TYPES.ReturnStatement)
@@ -148,7 +151,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
       return true;
     }
 
-    function isResultAssignedToOtherVariable(reference: Reference) 
+    function isResultAssignedToOtherVariable(reference: Reference)
     {
       const parent = reference.identifier.parent;
 
@@ -158,7 +161,7 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
       return parent.init === reference.identifier;
     }
 
-    function isMemberFunctionCalledOnResult(reference: Reference) 
+    function isMemberFunctionCalledOnResult(reference: Reference)
     {
       const parent = reference.identifier.parent;
 
@@ -178,25 +181,13 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
       if (memberExpression !== callExpression.callee)
         return false;
 
-      if (memberExpression.property.type !== AST_NODE_TYPES.Identifier)
-        return false;
-
-      const memberName = memberExpression.property.name;
-
-      const needsFollowUpCheck = memberName === "isOk" || memberName === "isErr";
-
-      if (needsFollowUpCheck) 
-      {
-        // console.log(context.sourceCode.getText(callExpression));
-      }
-
-      return true;
+      return memberExpression.property.type === AST_NODE_TYPES.Identifier;
     }
 
     function isMemberCall(node: TSESTree.Node, methodNames?: string[]): node is
         TSESTree.CallExpression & {
           callee: TSESTree.MemberExpression & { property: TSESTree.Identifier };
-        } 
+        }
     {
       if (node.type !== AST_NODE_TYPES.CallExpression)
         return false;
@@ -211,6 +202,11 @@ export const noUnusedResults = ESLintUtils.RuleCreator.withoutDocs({
         return methodNames.includes(node.callee.property.name);
 
       return true;
+    }
+
+    function expressionIsVoided(node: TSESTree.Node) 
+    {
+      return node.parent?.type === AST_NODE_TYPES.UnaryExpression && node.parent.operator === "void";
     }
   },
 });
