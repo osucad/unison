@@ -1,9 +1,9 @@
 import { RawOperationMessage } from "@unison-server/shared-definitions";
-import { cargoQueue, queue, QueueObject } from "async";
+import { cargoQueue, QueueObject } from "async";
 import { EventEmitter } from "eventemitter3";
 import nconf from "nconf";
 import { MessageSequencer } from "./MessageSequencer.js";
-import { IMessageSequencerFactory, IMessageSequencerOptions } from "./MessageSequencerFactory.js";
+import { IMessageSequencerFactory } from "./MessageSequencerFactory.js";
 
 enum PartitionState 
 {
