@@ -26,6 +26,9 @@
     },
     {
       "path": "./packages/client-test-utils"
+    },
+    {
+      "path": "./packages/server/message-sequencer"
     }
   ]
 }
