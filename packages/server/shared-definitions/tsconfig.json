@@ -7,16 +7,7 @@
       "path": "../../shared/shared-definitions"
     },
     {
-      "path": "../shared-definitions"
-    },
-    {
-      "path": "../service-runner"
-    },
-    {
       "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
   ]
 }

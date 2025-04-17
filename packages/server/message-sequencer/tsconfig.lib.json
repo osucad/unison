@@ -14,7 +14,17 @@
   "include": [
     "src/**/*.ts"
   ],
-  "references": [],
+  "references": [
+    {
+      "path": "../../shared/shared-definitions/tsconfig.lib.json"
+    },
+    {
+      "path": "../shared-definitions/tsconfig.lib.json"
+    },
+    {
+      "path": "../service-runner/tsconfig.lib.json"
+    }
+  ],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",

@@ -1,5 +1,5 @@
 {
-  "name": "@unison-server/message-sequencer",
+  "name": "@unison-server/service-runner",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -16,21 +16,15 @@
     }
   },
   "dependencies": {
-    "@unison-server/service-runner": "workspace:^",
-    "@unison-server/shared-definitions": "workspace:^",
-    "@unison/shared-definitions": "workspace:^",
-    "async": "^3.2.6",
-    "eventemitter3": "^5.0.1",
     "nconf": "^0.13.0",
     "tslib": "^2.3.0"
-  },
-  "devDependencies": {
-    "@types/async": "^3.2.24",
-    "@types/nconf": "^0.10.7"
   },
   "nx": {
     "tags": [
       "scope:server"
     ]
+  },
+  "devDependencies": {
+    "@types/nconf": "^0.10.7"
   }
 }

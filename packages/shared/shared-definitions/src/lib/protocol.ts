@@ -5,6 +5,7 @@ export enum MessageType
   ClientJoin = "join",
   ClientLeave = "leave",
   Operation = "op",
+  Signal = "signal"
 }
 
 export interface IDocumentMessage 
@@ -51,7 +52,15 @@ export interface ISubmitOps extends IDocumentMessage
   type: MessageType.Operation;
 }
 
+
+export interface ISignalMessage extends IDocumentMessage 
+{
+  type: MessageType.Signal;
+  contents: unknown;
+}
+
 export type DocumentOperation =
     | IClientJoin
     | IClientLeave
-    | ISubmitOps;
+    | ISubmitOps
+    | ISignalMessage;
