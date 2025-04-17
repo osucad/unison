@@ -1,0 +1,22 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../../dds/dds-base"
+    },
+    {
+      "path": "../client-definitions"
+    },
+    {
+      "path": "../../shared/shared-definitions"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

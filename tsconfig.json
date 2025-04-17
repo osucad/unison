@@ -7,28 +7,31 @@
       "path": "./apps/unison-server"
     },
     {
-      "path": "./packages/shared-definitions"
-    },
-    {
-      "path": "./packages/client"
-    },
-    {
-      "path": "./packages/client-definitions"
-    },
-    {
-      "path": "./packages/dds-base"
-    },
-    {
-      "path": "./packages/dds-object"
-    },
-    {
-      "path": "./packages/dds-counter"
-    },
-    {
-      "path": "./packages/client-test-utils"
-    },
-    {
       "path": "./packages/server/message-sequencer"
+    },
+    {
+      "path": "./packages/client/unison-client"
+    },
+    {
+      "path": "./tools/eslint-rules"
+    },
+    {
+      "path": "./packages/client/client-definitions"
+    },
+    {
+      "path": "./packages/client/client-test-utils"
+    },
+    {
+      "path": "./packages/dds/dds-base"
+    },
+    {
+      "path": "./packages/dds/object"
+    },
+    {
+      "path": "./packages/dds/counter"
+    },
+    {
+      "path": "./packages/shared/shared-definitions"
     }
   ]
 }

@@ -4,7 +4,7 @@
   "include": [],
   "references": [
     {
-      "path": "../../packages/shared-definitions"
+      "path": "../../packages/shared/shared-definitions"
     },
     {
       "path": "./tsconfig.app.json"

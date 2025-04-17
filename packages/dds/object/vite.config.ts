@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: "../../../node_modules/.vite/packages/server/message-sequencer",
+  cacheDir: "../../../node_modules/.vite/packages/dds-object",
   plugins: [],
   // Uncomment this if you are using workers.
   // worker: {

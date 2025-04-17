@@ -1,3 +1,4 @@
-export function messageSequencer(): string {
-  return 'message-sequencer';
+export function messageSequencer(): string 
+{
+  return "message-sequencer";
 }

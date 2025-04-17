@@ -140,7 +140,7 @@ importers:
         version: 9.0.9
       '@unison/shared-definitions':
         specifier: workspace:^
-        version: link:../../packages/shared-definitions
+        version: link:../../packages/shared/shared-definitions
       compression:
         specifier: ^1.8.0
         version: 1.8.0
@@ -167,17 +167,35 @@ importers:
         specifier: ^2.8.17
         version: 2.8.17
 
-  packages/client:
+  packages/client/client-definitions:
+    dependencies:
+      '@unison/shared-definitions':
+        specifier: workspace:^
+        version: link:../../shared/shared-definitions
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
+  packages/client/client-test-utils:
+    dependencies:
+      '@unison/client-definitions':
+        specifier: workspace:*
+        version: link:../client-definitions
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
+  packages/client/unison-client:
     dependencies:
       '@unison/client-definitions':
         specifier: workspace:^
         version: link:../client-definitions
       '@unison/dds-base':
         specifier: workspace:^
-        version: link:../dds-base
+        version: link:../../dds/dds-base
       '@unison/shared-definitions':
         specifier: workspace:^
-        version: link:../shared-definitions
+        version: link:../../shared/shared-definitions
       axios:
         specifier: ^1.6.0
         version: 1.8.4
@@ -185,29 +203,23 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1(bufferutil@4.0.1)(utf-8-validate@6.0.5)
 
-  packages/client-definitions:
+  packages/dds/counter:
     dependencies:
-      '@unison/shared-definitions':
-        specifier: workspace:^
-        version: link:../shared-definitions
+      '@unison/client-definitions':
+        specifier: workspace:*
+        version: link:../../client/client-definitions
+      '@unison/dds-base':
+        specifier: workspace:*
+        version: link:../dds-base
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
 
-  packages/client-test-utils:
+  packages/dds/dds-base:
     dependencies:
       '@unison/client-definitions':
         specifier: workspace:^
-        version: link:../client-definitions
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/dds-base:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
+        version: link:../../client/client-definitions
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -215,23 +227,11 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
 
-  packages/dds-counter:
+  packages/dds/object:
     dependencies:
       '@unison/client-definitions':
         specifier: workspace:^
-        version: link:../client-definitions
-      '@unison/dds-base':
-        specifier: workspace:^
-        version: link:../dds-base
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/dds-object:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
+        version: link:../../client/client-definitions
       '@unison/dds-base':
         specifier: workspace:^
         version: link:../dds-base
@@ -244,7 +244,7 @@ importers:
     devDependencies:
       '@unison/client-test-utils':
         specifier: workspace:^
-        version: link:../client-test-utils
+        version: link:../../client/client-test-utils
 
   packages/server/message-sequencer:
     dependencies:
@@ -252,7 +252,7 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
 
-  packages/shared-definitions:
+  packages/shared/shared-definitions:
     dependencies:
       tslib:
         specifier: ^2.3.0
