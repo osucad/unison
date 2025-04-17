@@ -116,11 +116,15 @@ export class MessageSequencer
     }
     else if (requiresWriteScope(operation) && (this.config.allowSystemSentOps || message.clientId !== null)) 
     {
-      assert(message.clientId !== null, "non-system message sent without client id");
-
-      const client = this.clientManager.get(message.clientId);
-      if (!client || isReadonlyClient(client))
+      if (message.clientId === null && !this.config.allowSystemSentOps)
         return;
+
+      if (message.clientId !== null) 
+      {
+        const client = this.clientManager.get(message.clientId);
+        if (!client || isReadonlyClient(client))
+          return;
+      }
     }
 
     let sequenceNumber = this.sequenceNumber;
