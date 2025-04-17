@@ -113,7 +113,7 @@ export class MessageSequencer
         }
       }
     }
-    else if (requiresWriteScope(operation) && (this.config.allowSystemSentOps || message.clientId !== null)) 
+    else if (requiresWriteScope(operation))
     {
       if (message.clientId === null && !this.config.allowSystemSentOps)
         return;
