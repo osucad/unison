@@ -46,11 +46,13 @@ export class MessageSequencerRunner implements IRunner
 
   private startIdleTimer() 
   {
+    const maxIdleTime = this.config.get("sequencer:maxIdleTime") ?? 60_000;
+
     this.idleCheckInterval = setInterval(() => 
     {
       for (const [, partition] of [...this.partitions]) 
       {
-        if (partition.idleDuration > 60_000)
+        if (partition.idleDuration > maxIdleTime)
           void this.stopPartition(partition.documentId);
       }
     }, 10_000);
