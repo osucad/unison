@@ -31,9 +31,6 @@ export class MessageSequencerFactory implements IMessageSequencerFactory
       documentId,
       deltasProducer,
       signalsProducer,
-      {
-        allowSystemSentOps: this.config.get("sequencer:allowSystemSentOps") ?? false,
-      },
     );
   }
 }

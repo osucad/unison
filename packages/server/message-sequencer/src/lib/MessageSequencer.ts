@@ -38,7 +38,6 @@ export class MessageSequencer
     private readonly documentId: string,
     private readonly deltasProducer: IProducer<ISequencedDocumentMessage>,
     private readonly signalsProducer: IProducer<ISequencedDocumentMessage>,
-    private readonly config: { allowSystemSentOps: boolean },
     checkpoint?: ISequencerCheckpoint,
   ) 
   {
@@ -110,17 +109,11 @@ export class MessageSequencer
         }
       }
     }
-    else if (requiresWriteScope(operation)) 
+    else if (requiresWriteScope(operation) && message.clientId !== null)
     {
-      if (message.clientId === null && !this.config.allowSystemSentOps)
+      const client = this.clientManager.get(message.clientId);
+      if (!client || isReadonlyClient(client))
         return;
-
-      if (message.clientId !== null) 
-      {
-        const client = this.clientManager.get(message.clientId);
-        if (!client || isReadonlyClient(client))
-          return;
-      }
     }
 
     let sequenceNumber = this.sequenceNumber;
