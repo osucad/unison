@@ -1,6 +1,5 @@
 import { IProducer, RawOperationMessage } from "@unison-server/shared-definitions";
 import { DocumentOperation, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
-import { queue } from "async";
 import { ClientSequenceManager, IClientSequence } from "./ClientSequenceManager.js";
 
 export interface ISequencerCheckpoint 
