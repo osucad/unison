@@ -41,7 +41,7 @@ export class MessageSequencer
     private readonly signalsProducer: IProducer<ISequencedDocumentMessage>,
     private readonly config: { allowSystemSentOps: boolean },
     checkpoint?: ISequencerCheckpoint,
-  )
+  ) 
   {
     if (checkpoint) 
     {
@@ -53,7 +53,7 @@ export class MessageSequencer
   private readonly clientManager = new ClientSequenceManager();
   private sequenceNumber = 0;
 
-  public async process(messages: RawOperationMessage[]) : Promise<void>
+  public async process(messages: RawOperationMessage[]): Promise<void> 
   {
     const deltasToProduce: ISequencedDocumentMessage[] = [];
     const signalsToProduce: ISequencedDocumentMessage[] = [];
@@ -66,7 +66,7 @@ export class MessageSequencer
 
       const { sendTarget, ticketedMessage } = ticketResult;
 
-      switch (sendTarget)
+      switch (sendTarget) 
       {
         case SendTarget.Deltas:
           deltasToProduce.push(ticketedMessage);
@@ -77,12 +77,10 @@ export class MessageSequencer
       }
     }
 
-    await this.produceQueue.drain();
-
-    void this.produceQueue.push({
-      deltas: deltasToProduce,
-      signals: signalsToProduce,
-    });
+    if (deltasToProduce.length > 0)
+      void this.deltasProducer.send(deltasToProduce, this.documentId);
+    if (signalsToProduce.length > 0)
+      void this.signalsProducer.send(signalsToProduce, this.documentId);
   }
 
   private ticket(message: RawOperationMessage) 
@@ -113,7 +111,7 @@ export class MessageSequencer
         }
       }
     }
-    else if (requiresWriteScope(operation))
+    else if (requiresWriteScope(operation)) 
     {
       if (message.clientId === null && !this.config.allowSystemSentOps)
         return;
@@ -149,22 +147,6 @@ export class MessageSequencer
       sendTarget
     };
   }
-
-  private produceQueue = queue(async (
-    messages: {
-      deltas: ISequencedDocumentMessage[];
-      signals: ISequencedDocumentMessage[];
-    }
-  ) =>
-  {
-    const sendP: Promise<void>[] = [];
-    if (messages.deltas.length > 0)
-      sendP.push(this.deltasProducer.send(messages.deltas, this.documentId));
-    if (messages.signals.length > 0)
-      sendP.push(this.signalsProducer.send(messages.signals, this.documentId));
-
-    return Promise.all(sendP);
-  });
 
   public createCheckpoint(): ISequencerCheckpoint 
   {
