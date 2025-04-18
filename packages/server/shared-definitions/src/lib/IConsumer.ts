@@ -1,4 +1,6 @@
-export interface IConsumer<T> 
+import { IMessage } from "./IMessage.js";
+
+export interface IConsumer<T = IMessage>
 {
   resume(): Promise<void>;
 

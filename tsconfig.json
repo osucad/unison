@@ -38,6 +38,9 @@
     },
     {
       "path": "./packages/server/service-runner"
+    },
+    {
+      "path": "./packages/server/local-server"
     }
   ]
 }
