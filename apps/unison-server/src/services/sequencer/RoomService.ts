@@ -4,13 +4,13 @@ import { IProducer } from "../../multiplayer/IProducer";
 import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";
 import { RoomConnection } from "./RoomConnection";
 
-export interface OrdererServiceEvents 
+export interface RoomServiceEvents
 {
   deltasProduced: (documentId: string, deltas: ISequencedDocumentMessage[]) => void;
   stop: () => void;
 }
 
-export class RoomService extends EventEmitter<OrdererServiceEvents>
+export class RoomService extends EventEmitter<RoomServiceEvents>
 {
   private readonly sequencers = new Map<string, MessageSequencer>();
 
@@ -84,7 +84,7 @@ export class RoomService extends EventEmitter<OrdererServiceEvents>
 
   private createSequencer(documentId: string) 
   {
-    const sequencer = new MessageSequencer(documentId, new DeltaProducer(documentId, this.onMessagesProduced));
+    const sequencer = new MessageSequencer(documentId, new DeltasProducer(documentId, this.onMessagesProduced));
 
     this.sequencers.set(documentId, sequencer);
 
@@ -97,7 +97,7 @@ export class RoomService extends EventEmitter<OrdererServiceEvents>
   };
 }
 
-export class DeltaProducer implements IProducer<ISequencedDocumentMessage> 
+export class DeltasProducer implements IProducer<ISequencedDocumentMessage>
 {
   constructor(
     readonly documentId: string,
