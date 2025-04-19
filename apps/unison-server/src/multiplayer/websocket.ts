@@ -68,6 +68,7 @@ function handleConnection(
     const connection = connectionMap.get(documentId);
     if (!connection) 
     {
+      client.disconnect();
       // TODO: send error response
       return;
     }
@@ -75,15 +76,7 @@ function handleConnection(
     if (message.type !== MessageType.Operation)
       return;
 
-    connection.send({
-      clientId: client.id,
-      operation: {
-        type: MessageType.Operation,
-        contents: message.contents,
-        clientSequenceNumber: message.clientSequenceNumber,
-      },
-      timestamp: Date.now(),
-    });
+    connection.sendOps(message);
   });
 
   client.on("disconnect", () => 
@@ -92,17 +85,9 @@ function handleConnection(
       cleanupConnection(documentId, connection);
   });
 
-  function cleanupConnection(documentId: string, connection: OrdererConnection) 
+  const cleanupConnection = (documentId: string, connection: OrdererConnection) =>
   {
     connectionMap.delete(documentId);
-    connection.send({
-      clientId: null,
-      timestamp: Date.now(),
-      operation: {
-        type: MessageType.ClientLeave,
-        clientSequenceNumber: -1,
-        contents: { clientId: client.id }
-      }
-    });
-  }
+    connection.close();
+  };
 }

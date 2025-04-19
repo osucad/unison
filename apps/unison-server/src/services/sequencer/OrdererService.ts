@@ -61,12 +61,15 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents>
     }
   }
 
-  getConnection(documentId: string): OrdererConnection 
+  async getConnection(documentId: string, clientId: string): Promise<OrdererConnection>
   {
-    return new OrdererConnection(message => 
-    {
-      this.messageBuffer.push([documentId, message]);
-    });
+    return new OrdererConnection(
+      documentId,
+      clientId,
+      message =>
+      {
+        this.messageBuffer.push([documentId, message]);
+      });
   }
 
   private getSequencer(documentId: string) 
