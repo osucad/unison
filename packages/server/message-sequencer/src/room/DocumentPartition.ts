@@ -3,7 +3,7 @@ import { cargoQueue, QueueObject } from "async";
 import { EventEmitter } from "eventemitter3";
 import nconf from "nconf";
 import { Room } from "./Room.js";
-import { IRoomFactory } from "./RoomFactory.js";
+import { RoomFactory } from "./RoomFactory.js";
 
 enum PartitionState 
 {
@@ -35,7 +35,7 @@ export class DocumentPartition extends EventEmitter<DocumentPartitionEvents>
 
   constructor(
     config: nconf.Provider,
-    factory: IRoomFactory,
+    factory: RoomFactory,
     documentId: string,
   )
   {
