@@ -1,4 +1,4 @@
-export class ClientSequenceManager 
+export class ClientManager
 {
   private readonly clients = new Map<string, IClientSequence>();
 
@@ -44,7 +44,7 @@ export class ClientSequenceManager
     return this.clients.delete(clientId);
   }
 
-  public getCheckpointData(): IClientSequence[]
+  public createCheckpoint(): IClientSequence[]
   {
     return structuredClone([...this.clients.values()]);
   }

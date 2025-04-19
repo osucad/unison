@@ -2,8 +2,8 @@ import { RawOperationMessage } from "@unison-server/shared-definitions";
 import { cargoQueue, QueueObject } from "async";
 import { EventEmitter } from "eventemitter3";
 import nconf from "nconf";
-import { MessageSequencer } from "./MessageSequencer.js";
-import { IMessageSequencerFactory } from "./MessageSequencerFactory.js";
+import { Room } from "./Room.js";
+import { IRoomFactory } from "./RoomFactory.js";
 
 enum PartitionState 
 {
@@ -27,7 +27,7 @@ export class DocumentPartition extends EventEmitter<DocumentPartitionEvents>
 {
   readonly documentId: string;
 
-  private sequencer!: MessageSequencer;
+  private sequencer!: Room;
   private queue: QueueObject<RawOperationMessage>;
   private status: PartitionState;
 
@@ -35,7 +35,7 @@ export class DocumentPartition extends EventEmitter<DocumentPartitionEvents>
 
   constructor(
     config: nconf.Provider,
-    factory: IMessageSequencerFactory,
+    factory: IRoomFactory,
     documentId: string,
   )
   {
@@ -106,11 +106,6 @@ export class DocumentPartition extends EventEmitter<DocumentPartitionEvents>
   process(message: RawOperationMessage) 
   {
     void this.queue.push(message);
-  }
-
-  hasPendingWork() 
-  {
-    return !this.queue.idle();
   }
 
   get idleDuration() 

@@ -1,11 +1,17 @@
 import { IProducer, RawOperationMessage } from "@unison-server/shared-definitions";
 import { DocumentOperation, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
-import { ClientSequenceManager, IClientSequence } from "./ClientSequenceManager.js";
+import { EventEmitter } from "eventemitter3";
+import { ClientManager, IClientSequence } from "./ClientManager.js";
 
-export interface ISequencerCheckpoint 
+export interface RoomEvents 
+{
+  noClients(): void;
+}
+
+export interface IRoomCheckpoint 
 {
   sequenceNumber: number;
-  clients: IClientSequence[];
+  clients: IClientSequence[] | undefined;
 }
 
 const systemMessageTypes = [MessageType.ClientJoin, MessageType.ClientLeave] as const;
@@ -32,23 +38,26 @@ enum SendTarget
   Signal = "signals",
 }
 
-export class MessageSequencer 
+export class Room extends EventEmitter<RoomEvents>
 {
   constructor(
     private readonly documentId: string,
     private readonly deltasProducer: IProducer<ISequencedDocumentMessage>,
     private readonly signalsProducer: IProducer<ISequencedDocumentMessage>,
-    checkpoint?: ISequencerCheckpoint,
+    lastCheckpoint: IRoomCheckpoint,
   ) 
   {
-    if (checkpoint) 
+    super();
+
+    if (lastCheckpoint)
     {
-      this.sequenceNumber = checkpoint.sequenceNumber;
-      this.clientManager.restore(checkpoint.clients);
+      this.sequenceNumber = lastCheckpoint.sequenceNumber;
+      if (lastCheckpoint.clients !== undefined)
+        this.clientManager.restore(lastCheckpoint.clients);
     }
   }
 
-  private readonly clientManager = new ClientSequenceManager();
+  private readonly clientManager = new ClientManager();
   private sequenceNumber = 0;
 
   public async process(messages: RawOperationMessage[]): Promise<void> 
@@ -105,11 +114,14 @@ export class MessageSequencer
         case MessageType.ClientLeave: {
           if (!this.clientManager.removeClient(operation.contents.clientId))
             return;
+
+          if (this.clientManager.count() === 0) 
+            this.emit("noClients");
           break;
         }
       }
     }
-    else if (requiresWriteScope(operation) && message.clientId !== null)
+    else if (requiresWriteScope(operation) && message.clientId !== null) 
     {
       const client = this.clientManager.get(message.clientId);
       if (!client || isReadonlyClient(client))
@@ -140,11 +152,13 @@ export class MessageSequencer
     };
   }
 
-  public createCheckpoint(): ISequencerCheckpoint 
+  public createCheckpoint(): IRoomCheckpoint 
   {
+    const {sequenceNumber, clientManager} = this;
+
     return {
-      sequenceNumber: this.sequenceNumber,
-      clients: this.clientManager.getCheckpointData()
+      sequenceNumber,
+      clients: clientManager.createCheckpoint()
     };
   }
 }

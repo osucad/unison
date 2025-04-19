@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "nx": {
-    "tags": ["scope:server"],
+    "tags": [
+      "scope:server"
+    ],
     "targets": {
       "serve": {
         "executor": "@nx/js:node",
@@ -29,6 +31,8 @@
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.9",
     "@unison/shared-definitions": "workspace:^",
+    "@unison-server/shared-definitions": "workspace:^",
+    "async": "^3.2.6",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "eventemitter3": "^5.0.1",
@@ -37,6 +41,7 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "@types/async": "^3.2.24",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17"
   }

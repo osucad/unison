@@ -1,10 +1,10 @@
 import { IRunner } from "@unison-server/service-runner";
 import { IConsumer, RawOperationMessage } from "@unison-server/shared-definitions";
 import nconf from "nconf";
+import { RoomFactory } from "./RoomFactory.js";
 import { DocumentPartition } from "./DocumentPartition.js";
-import { IMessageSequencerFactory } from "./MessageSequencerFactory.js";
 
-export class MessageSequencerRunner implements IRunner
+export class RoomProcessor implements IRunner 
 {
   private partitions = new Map<string, DocumentPartition>;
   private stoppingPartitions = new Map<string, Promise<void>>;
@@ -12,7 +12,7 @@ export class MessageSequencerRunner implements IRunner
 
   constructor(
     private readonly config: nconf.Provider,
-    private readonly sequencerFactory: IMessageSequencerFactory,
+    private readonly roomFactory: RoomFactory,
     private readonly consumer: IConsumer<RawOperationMessage>,
   ) 
   {
@@ -61,7 +61,7 @@ export class MessageSequencerRunner implements IRunner
   {
     const partition = new DocumentPartition(
       this.config,
-      this.sequencerFactory,
+      this.roomFactory,
       documentId,
     );
 

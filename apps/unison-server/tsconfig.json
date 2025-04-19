@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../packages/server/shared-definitions"
+    },
+    {
       "path": "../../packages/shared/shared-definitions"
     },
     {
