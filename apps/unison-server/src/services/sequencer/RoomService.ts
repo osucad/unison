@@ -2,7 +2,7 @@ import { ISequencedDocumentMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { IProducer } from "../../multiplayer/IProducer";
 import { MessageSequencer, RawOperationMessage } from "./MessageSequencer";
-import { OrdererConnection } from "./OrdererConnection";
+import { RoomConnection } from "./RoomConnection";
 
 export interface OrdererServiceEvents 
 {
@@ -10,7 +10,7 @@ export interface OrdererServiceEvents
   stop: () => void;
 }
 
-export class OrdererService extends EventEmitter<OrdererServiceEvents> 
+export class RoomService extends EventEmitter<OrdererServiceEvents>
 {
   private readonly sequencers = new Map<string, MessageSequencer>();
 
@@ -61,9 +61,9 @@ export class OrdererService extends EventEmitter<OrdererServiceEvents>
     }
   }
 
-  async getConnection(documentId: string, clientId: string): Promise<OrdererConnection>
+  async getConnection(documentId: string, clientId: string): Promise<RoomConnection>
   {
-    return new OrdererConnection(
+    return new RoomConnection(
       documentId,
       clientId,
       message =>
@@ -102,7 +102,7 @@ export class DeltaProducer implements IProducer<ISequencedDocumentMessage>
   constructor(
     readonly documentId: string,
     readonly onMessagesProduced: (messages: ISequencedDocumentMessage[], documentId: string) => void
-  ) 
+  )
   {
   }
 

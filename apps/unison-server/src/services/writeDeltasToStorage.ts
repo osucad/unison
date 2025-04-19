@@ -1,10 +1,10 @@
 import { IUnisonServerResources } from "./IUnisonServerResources";
 
 export function writeDeltasToStorage(
-  { ordererService, deltaStorage }: IUnisonServerResources
+  { roomService, deltaStorage }: IUnisonServerResources
 ) 
 {
-  ordererService.on("deltasProduced", (documentId, deltas) => 
+  roomService.on("deltasProduced", (documentId, deltas) =>
   {
     deltaStorage.append(documentId, deltas);
   });

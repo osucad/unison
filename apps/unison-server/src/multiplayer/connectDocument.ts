@@ -2,13 +2,13 @@ import { ClientMessages, ConnectDocumentFailure, IConnect, invalidToken, PROTOCO
 import { err, ok, Result } from "neverthrow";
 import { Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
-import { OrdererConnection } from "../services/sequencer/OrdererConnection";
+import { RoomConnection } from "../services/sequencer/RoomConnection";
 
 export async function connectDocument(
   client: Socket<ClientMessages, ServerMessages>,
   options: IConnect,
-  { ordererService, tokenVerifier }: IUnisonServerResources,
-): Promise<Result<OrdererConnection, ConnectDocumentFailure>> 
+  { roomService, tokenVerifier }: IUnisonServerResources,
+): Promise<Result<RoomConnection, ConnectDocumentFailure>>
 {
   const { documentId } = options;
 
@@ -28,7 +28,7 @@ export async function connectDocument(
   if (!token.scopes.includes(ScopeTypes.Read))
     return err(invalidToken());
 
-  const connection = await ordererService.getConnection(client.id, documentId);
+  const connection = await roomService.getConnection(client.id, documentId);
 
   client.join(documentId);
 

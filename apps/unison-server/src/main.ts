@@ -3,12 +3,12 @@ import { InMemoryDeltaStorage } from "./services/InMemoryDeltaStorage";
 import { InMemoryDocumentStorage } from "./services/InMemoryDocumentStorage";
 import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
 import { IUnisonServerResources } from "./services/IUnisonServerResources";
-import { OrdererService } from "./services/sequencer/OrdererService";
+import { RoomService } from "./services/sequencer/RoomService";
 
 async function main() 
 {
   const resources: IUnisonServerResources = {
-    ordererService: new OrdererService(),
+    roomService: new RoomService(),
     tokenVerifier: new InsecureTokenVerifier(),
     deltaStorage: new InMemoryDeltaStorage(),
     documentStorage: new InMemoryDocumentStorage(),

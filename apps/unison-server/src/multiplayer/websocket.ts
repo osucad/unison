@@ -1,7 +1,7 @@
 import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/shared-definitions";
 import { Server, Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
-import { OrdererConnection } from "../services/sequencer/OrdererConnection";
+import { RoomConnection } from "../services/sequencer/RoomConnection";
 import { connectDocument } from "./connectDocument";
 import { broadcastMessages } from "./messageBroadcaster";
 
@@ -23,7 +23,7 @@ function handleConnection(
   resources: IUnisonServerResources,
 ) 
 {
-  const connectionMap = new Map<string, OrdererConnection>();
+  const connectionMap = new Map<string, RoomConnection>();
   const connecting = new Set<string>();
 
   client.on("connectDocument", async (options, callback) => 
@@ -85,7 +85,7 @@ function handleConnection(
       cleanupConnection(documentId, connection);
   });
 
-  const cleanupConnection = (documentId: string, connection: OrdererConnection) =>
+  const cleanupConnection = (documentId: string, connection: RoomConnection) =>
   {
     connectionMap.delete(documentId);
     connection.close();

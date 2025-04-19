@@ -1,7 +1,7 @@
 import { IClient, ISubmitOps, MessageType } from "@unison/shared-definitions";
 import { RawOperationMessage } from "./MessageSequencer";
 
-export class OrdererConnection 
+export class RoomConnection
 {
   constructor(
     private readonly documentId: string,

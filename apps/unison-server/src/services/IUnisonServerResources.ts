@@ -1,11 +1,11 @@
 import { IDeltaStorage } from "./IDeltaStorage";
 import { IDocumentStorage } from "./IDocumentStorage";
-import { OrdererService } from "./sequencer/OrdererService";
+import { RoomService } from "./sequencer/RoomService";
 import { ITokenVerifier } from "./ITokenVerifier";
 
 export interface IUnisonServerResources 
 {
-  ordererService: OrdererService;
+  roomService: RoomService;
   tokenVerifier: ITokenVerifier;
   deltaStorage: IDeltaStorage;
   documentStorage: IDocumentStorage;
