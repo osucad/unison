@@ -29,7 +29,6 @@ export async function createApp(resources: IUnisonServerResources)
 
   handleWebSockets(io, resources);
   writeDeltasToStorage(resources);
-  resources.roomService.start();
 
   return server;
 }

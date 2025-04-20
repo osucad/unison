@@ -1,5 +1,5 @@
 import { IClient, ISubmitOps, MessageType } from "@unison/shared-definitions";
-import { RawOperationMessage } from "./MessageSequencer";
+import { RawOperationMessage } from "./Room";
 
 export class RoomConnection
 {

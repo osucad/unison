@@ -2,7 +2,7 @@ export class ClientManager
 {
   readonly clients = new Map<string, ClientInfo>();
 
-  get count() 
+  count()
   {
     return this.clients.size;
   }

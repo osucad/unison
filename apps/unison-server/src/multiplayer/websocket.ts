@@ -1,16 +1,19 @@
 import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/shared-definitions";
 import { Server, Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
-import { RoomConnection } from "../services/sequencer/RoomConnection";
+import { RoomConnection } from "../services/multiplayer/RoomConnection";
 import { connectDocument } from "./connectDocument";
-import { broadcastMessages } from "./messageBroadcaster";
 
 export function handleWebSockets(
   io: Server<ClientMessages, ServerMessages>,
   resources: IUnisonServerResources,
 ) 
 {
-  broadcastMessages(resources, io);
+  resources.roomService.on(
+    "deltasProduced",
+    (documentId, deltas) =>
+      io.to(documentId).emit("deltas", documentId, deltas)
+  );
 
   io.on("connect", async client => 
   {

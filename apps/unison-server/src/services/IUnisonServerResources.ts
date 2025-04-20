@@ -1,6 +1,6 @@
 import { IDeltaStorage } from "./IDeltaStorage";
 import { IDocumentStorage } from "./IDocumentStorage";
-import { RoomService } from "./sequencer/RoomService";
+import { RoomService } from "./multiplayer/RoomService";
 import { ITokenVerifier } from "./ITokenVerifier";
 
 export interface IUnisonServerResources 

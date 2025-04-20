@@ -3,7 +3,7 @@ import { InMemoryDeltaStorage } from "./services/InMemoryDeltaStorage";
 import { InMemoryDocumentStorage } from "./services/InMemoryDocumentStorage";
 import { InsecureTokenVerifier } from "./services/InsecureTokenVerifier";
 import { IUnisonServerResources } from "./services/IUnisonServerResources";
-import { RoomService } from "./services/sequencer/RoomService";
+import { RoomService } from "./services/multiplayer/RoomService";
 
 async function main() 
 {

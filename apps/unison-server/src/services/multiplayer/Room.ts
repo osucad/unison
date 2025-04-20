@@ -1,5 +1,6 @@
 import { DocumentOperation, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
-import { ClientManager } from "../../multiplayer/ClientManager";
+import { EventEmitter } from "eventemitter3";
+import { ClientManager } from "./ClientManager";
 import { IProducer } from "../../multiplayer/IProducer";
 
 export interface RawOperationMessage 
@@ -9,13 +10,19 @@ export interface RawOperationMessage
   readonly operation: DocumentOperation;
 }
 
-export class MessageSequencer 
+export interface RoomEvents 
+{
+  noClients(): void;
+}
+
+export class Room extends EventEmitter<RoomEvents>
 {
   constructor(
     readonly documentId: string,
     readonly deltasProducer: IProducer<ISequencedDocumentMessage>
   ) 
   {
+    super();
   }
 
   private readonly clientManager = new ClientManager();
@@ -32,8 +39,6 @@ export class MessageSequencer
 
       if (operation.type === MessageType.ClientJoin) 
       {
-
-
         const isNewClient = this.clientManager.upsertClient(
           operation.contents.clientId,
           operation.clientSequenceNumber,
@@ -50,6 +55,9 @@ export class MessageSequencer
 
         if (!this.clientManager.removeClient(leaveInfo.contents.clientId))
           return;
+
+        if (this.clientManager.count() === 0)
+          this.emit("noClients");
       }
 
       if (message.operation.type === MessageType.Operation) 
