@@ -8,7 +8,7 @@ export function createDeltaRoutes({ deltaStorage, tokenVerifier }: IUnisonServer
   const router = Router();
 
   router.get(
-    "/api/v1/deltas/:documentId",
+    "/deltas/:documentId",
     requireDocumentScopes(tokenVerifier, ScopeTypes.Read),
     async (req, res) => 
     {

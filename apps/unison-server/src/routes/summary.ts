@@ -8,7 +8,7 @@ export function createSummaryRoutes({ tokenVerifier, documentStorage }: IUnisonS
   const router = Router();
 
   router.post(
-    "/api/v1/documents",
+    "/documents",
     requireScopes(tokenVerifier, ScopeTypes.Create),
     async (req, res) => 
     {
@@ -22,7 +22,7 @@ export function createSummaryRoutes({ tokenVerifier, documentStorage }: IUnisonS
     });
 
   router.post(
-    "/api/v1/documents/:documentId/summarize",
+    "/documents/:documentId/summarize",
     requireDocumentScopes(tokenVerifier, ScopeTypes.Write),
     async (req, res) => 
     {
@@ -38,7 +38,7 @@ export function createSummaryRoutes({ tokenVerifier, documentStorage }: IUnisonS
     });
 
   router.get(
-    "/api/v1/documents/:documentId/summary/:summary",
+    "/documents/:documentId/summary/:summary",
     requireDocumentScopes(tokenVerifier, ScopeTypes.Read),
     async (req, res) => 
     {
