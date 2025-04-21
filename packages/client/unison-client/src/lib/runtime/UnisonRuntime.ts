@@ -1,7 +1,7 @@
 import { DDS, DDSFactory } from "@unison/dds-base";
 import { nn } from "../util/nn.js";
 import { DDSTypeRegistry } from "./DDSTypeRegistry.js";
-import { IDocumentSummary, IObjectSummary, IUnisonRuntime } from "@unison/client-definitions";
+import { DDSAttributes, IDocumentSummary, IObjectSummary, IUnisonRuntime } from "@unison/client-definitions";
 
 export class UnisonRuntime implements IUnisonRuntime 
 {
@@ -78,11 +78,7 @@ export class UnisonRuntime implements IUnisonRuntime
   {
     for (const [key, value] of Object.entries(summary.entries)) 
     {
-      const factory = this._typeRegistry.resolve(value.attributes);
-      if (!factory)
-        throw new Error(`Could not resolve dds factory for type "${value.attributes.type}"`);
-
-      this._aliveObjects.set(key, factory.createInstance());
+      this._aliveObjects.set(key, this.createObject(value.attributes));
     }
 
     for (const [id, dds] of this._aliveObjects.entries()) 
@@ -104,6 +100,15 @@ export class UnisonRuntime implements IUnisonRuntime
 
       this.rootObjects[key] = dds;
     }
+  }
+
+  createObject(attributes: DDSAttributes) 
+  {
+    const factory = this._typeRegistry.resolve(attributes);
+    if (!factory)
+      throw new Error(`Could not resolve dds factory for type "${attributes.type}"`);
+
+    return factory.createInstance();
   }
 }
 
