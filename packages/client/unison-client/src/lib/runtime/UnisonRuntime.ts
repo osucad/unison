@@ -2,12 +2,13 @@ import { DDS, DDSFactory } from "@unison/dds-base";
 import { nn } from "../util/nn.js";
 import { DDSTypeRegistry } from "./DDSTypeRegistry.js";
 import { DDSAttributes, IDocumentSummary, IObjectSummary, IUnisonRuntime } from "@unison/client-definitions";
+import { DeltaChannel } from "./DeltaChannel.js";
 
 export class UnisonRuntime implements IUnisonRuntime 
 {
   readonly rootObjects: Record<string, DDS> = {};
 
-  private readonly _aliveObjects = new Map<string, DDS>();
+  private readonly channels = new Map<string, DeltaChannel>();
 
   private readonly _typeRegistry: DDSTypeRegistry;
 
@@ -42,14 +43,20 @@ export class UnisonRuntime implements IUnisonRuntime
     }
   }
 
-  attach(dds: DDS) 
+  attach(dds: DDS, idAndSummary?: { id: string; summary: IObjectSummary }) 
   {
     if (dds.isAttached)
       return;
 
-    const id = generateId();
-    dds.attach(id, this);
-    this._aliveObjects.set(id, dds);
+    const id = idAndSummary?.id ?? generateId();
+
+    const channel = new DeltaChannel(this, id, dds);
+    if (idAndSummary)
+      dds.load(idAndSummary.summary);
+
+    dds.attach(id, this, channel);
+
+    this.channels.set(id, channel);
   }
 
   createSummary(): IDocumentSummary 
@@ -57,8 +64,9 @@ export class UnisonRuntime implements IUnisonRuntime
     const rootObjects: Record<string, string> = {};
     const entries: Record<string, IObjectSummary> = {};
 
-    for (const [id, dds] of this._aliveObjects) 
+    for (const [id, { dds }] of this.channels) 
     {
+
       entries[id] = {
         attributes: structuredClone(dds.attributes),
         contents: dds.createSummary(),
@@ -76,22 +84,31 @@ export class UnisonRuntime implements IUnisonRuntime
 
   private load(schema: Record<string, DDSFactory>, summary: IDocumentSummary) 
   {
-    for (const [key, value] of Object.entries(summary.entries)) 
+
+    for (const [id, value] of Object.entries(summary.entries)) 
     {
-      this._aliveObjects.set(key, this.createObject(value.attributes));
+      const dds = this.createObject(value.attributes);
+      const channel = new DeltaChannel(this, id, dds);
+
+      this.channels.set(id, channel);
     }
 
-    for (const [id, dds] of this._aliveObjects.entries()) 
+    for (const [id, channel] of this.channels.entries()) 
     {
-      dds.load(summary.entries[id].contents);
-      dds.attach(id, this);
+      this.attach(
+        channel.dds,
+        {
+          id,
+          summary: summary.entries[id],
+        }
+      );
     }
 
     for (const [key, factory] of Object.entries(schema)) 
     {
       const id = nn(summary.rootObjects[key], `Missing key for "${key}" root object in summary`);
 
-      const dds = nn(this._aliveObjects.get(id), `No summary for entrypoint (id="${id}", name="${key}")`);
+      const { dds } = nn(this.channels.get(id), `No summary for entrypoint (id="${id}", name="${key}")`);
 
       console.assert(
         dds.attributes.type === factory.attributes.type,
@@ -109,6 +126,11 @@ export class UnisonRuntime implements IUnisonRuntime
       throw new Error(`Could not resolve dds factory for type "${attributes.type}"`);
 
     return factory.createInstance();
+  }
+
+  getObject(id: string): DDS | undefined 
+  {
+    return this.channels.get(id)?.dds;
   }
 }
 

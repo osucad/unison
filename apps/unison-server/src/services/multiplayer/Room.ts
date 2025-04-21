@@ -1,4 +1,4 @@
-import { DocumentOperation, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
+import { DocumentMessage, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { ClientManager } from "./ClientManager";
 import { IProducer } from "../../multiplayer/IProducer";
@@ -7,7 +7,7 @@ export interface RawOperationMessage
 {
   readonly clientId: string | null;
   readonly timestamp: number;
-  readonly operation: DocumentOperation;
+  readonly operation: DocumentMessage;
 }
 
 export interface RoomEvents 
@@ -60,7 +60,7 @@ export class Room extends EventEmitter<RoomEvents>
           this.emit("noClients");
       }
 
-      if (message.operation.type === MessageType.Operation) 
+      if (message.operation.type === MessageType.Delta)
       {
         if (!message.clientId)
           return;

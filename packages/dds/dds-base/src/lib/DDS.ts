@@ -1,4 +1,4 @@
-import { DDSAttributes, IUnisonRuntime } from "@unison/client-definitions";
+import { DDSAttributes, IDeltaChannel, IUnisonRuntime } from "@unison/client-definitions";
 import { EventEmitter } from "eventemitter3";
 
 export interface DDSEvents 
@@ -28,15 +28,20 @@ export abstract class DDS extends EventEmitter<DDSEvents>
     return !!this._runtime;
   }
 
-  public attach(id: string, runtime: IUnisonRuntime) 
+  public attach(id: string, runtime: IUnisonRuntime, deltas: IDeltaChannel)
   {
     if (this.isAttached)
       throw new Error("Already attached");
 
     this._id = id;
     this._runtime = runtime;
+
+    this.attachToDeltaChannel(deltas);
+
     this.emit("attach");
   }
+
+  protected abstract attachToDeltaChannel(deltas: IDeltaChannel): void;
 
   public detach() 
   {

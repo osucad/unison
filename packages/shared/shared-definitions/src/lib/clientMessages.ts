@@ -1,4 +1,4 @@
-import { ISubmitOps } from "./protocol";
+import { IDocumentDelta } from "./protocol";
 import { ConnectDocumentResult, IConnect } from "./connect";
 
 export interface ClientMessages 
@@ -8,6 +8,6 @@ export interface ClientMessages
     callback: (result: ConnectDocumentResult) => void,
   ): void;
 
-  submitOps(documentId: string, ops: ISubmitOps): void;
+  submitOps(documentId: string, ops: IDocumentDelta): void;
 }
 

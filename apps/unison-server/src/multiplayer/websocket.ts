@@ -76,7 +76,7 @@ function handleConnection(
       return;
     }
 
-    if (message.type !== MessageType.Operation)
+    if (message.type !== MessageType.Delta)
       return;
 
     connection.sendOps(message);

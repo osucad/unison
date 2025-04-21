@@ -1,5 +1,5 @@
 import { IProducer, RawOperationMessage } from "@unison-server/shared-definitions";
-import { DocumentOperation, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
+import { DocumentMessage, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { ClientManager, IClientSequence } from "./ClientManager.js";
 
@@ -16,15 +16,15 @@ export interface IRoomCheckpoint
 
 const systemMessageTypes = [MessageType.ClientJoin, MessageType.ClientLeave] as const;
 
-function isSystemMessage(operation: DocumentOperation)
-  : operation is Extract<DocumentOperation, { type: typeof systemMessageTypes[keyof typeof systemMessageTypes] }> 
+function isSystemMessage(operation: DocumentMessage)
+  : operation is Extract<DocumentMessage, { type: typeof systemMessageTypes[keyof typeof systemMessageTypes] }>
 {
   return (systemMessageTypes as readonly string[]).includes(operation.type);
 }
 
-function requiresWriteScope(operation: DocumentOperation) 
+function requiresWriteScope(operation: DocumentMessage)
 {
-  return operation.type === MessageType.Operation;
+  return operation.type === MessageType.Delta;
 }
 
 function isReadonlyClient(client: IClientSequence) 

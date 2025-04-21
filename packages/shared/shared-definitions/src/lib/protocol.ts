@@ -4,20 +4,15 @@ export enum MessageType
 {
   ClientJoin = "join",
   ClientLeave = "leave",
-  Operation = "op",
+  Delta = "delta",
   Signal = "signal"
 }
 
-export interface IDocumentMessage 
+export interface IDocumentMessage<T = unknown>
 {
   clientSequenceNumber: number;
   type: string;
-  contents: unknown;
-}
-
-export interface IDocumentSystemMessage extends IDocumentMessage 
-{
-  data: unknown;
+  contents: T;
 }
 
 export interface ISequencedDocumentMessage 
@@ -25,12 +20,12 @@ export interface ISequencedDocumentMessage
   clientId: string | null;
   sequenceNumber: number;
   clientSequenceNumber: number;
-  type: string;
-  contents: unknown;
+  type: MessageType;
+  operation: unknown;
   data?: string;
 }
 
-export interface IClientJoin extends IDocumentMessage 
+export interface IClientJoin extends IDocumentMessage
 {
   type: MessageType.ClientJoin;
   contents: {
@@ -39,7 +34,7 @@ export interface IClientJoin extends IDocumentMessage
   };
 }
 
-export interface IClientLeave extends IDocumentMessage 
+export interface IClientLeave extends IDocumentMessage
 {
   type: MessageType.ClientLeave;
   contents: {
@@ -47,9 +42,16 @@ export interface IClientLeave extends IDocumentMessage
   };
 }
 
-export interface ISubmitOps extends IDocumentMessage 
+export interface IDocumentDelta extends IDocumentMessage
 {
-  type: MessageType.Operation;
+  type: MessageType.Delta;
+  ops: IOperation[];
+}
+
+export interface IOperation
+{
+  target: string | null;
+  contents: unknown;
 }
 
 
@@ -59,8 +61,8 @@ export interface ISignalMessage extends IDocumentMessage
   contents: unknown;
 }
 
-export type DocumentOperation =
+export type DocumentMessage =
     | IClientJoin
     | IClientLeave
-    | ISubmitOps
+    | IDocumentDelta
     | ISignalMessage;

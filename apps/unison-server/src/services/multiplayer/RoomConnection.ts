@@ -1,4 +1,4 @@
-import { IClient, ISubmitOps, MessageType } from "@unison/shared-definitions";
+import { IClient, IDocumentDelta, MessageType } from "@unison/shared-definitions";
 import { RawOperationMessage } from "./Room";
 
 export class RoomConnection
@@ -38,7 +38,7 @@ export class RoomConnection
     });
   }
 
-  sendOps(operation: ISubmitOps)
+  sendOps(operation: IDocumentDelta)
   {
     this.send({
       clientId: this.clientId,
