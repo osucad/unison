@@ -20,7 +20,7 @@
     "@unison-server/shared-definitions": "workspace:^",
     "@unison/shared-definitions": "workspace:^",
     "async": "^3.2.6",
-    "eventemitter3": "^5.0.1",
+    "eventemitter3": "4.0.7",
     "nconf": "^0.13.0",
     "tslib": "^2.3.0"
   },

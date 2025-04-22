@@ -41,6 +41,12 @@
     },
     {
       "path": "./packages/server/local-server"
+    },
+    {
+      "path": "./packages/client/core"
+    },
+    {
+      "path": "./apps/client-playground"
     }
   ]
 }

@@ -102,6 +102,9 @@ importers:
       react-refresh:
         specifier: ^0.10.0
         version: 0.10.0
+      swc-loader:
+        specifier: 0.1.15
+        version: 0.1.15(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack@5.98.0)
       ts-node:
         specifier: 10.9.1
         version: 10.9.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@18.16.20)(typescript@5.7.3)
@@ -132,6 +135,19 @@ importers:
       webpack-cli:
         specifier: ^5.1.4
         version: 5.1.4(webpack-dev-server@5.2.1)(webpack@5.98.0)
+
+  apps/client-playground:
+    dependencies:
+      '@unison-client/core':
+        specifier: workspace:^
+        version: link:../../packages/client/core
+      stringify-object:
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      '@types/stringify-object':
+        specifier: ^4.0.5
+        version: 4.0.5
 
   apps/unison-server:
     dependencies:
@@ -194,6 +210,18 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
 
+  packages/client/core:
+    dependencies:
+      eventemitter3:
+        specifier: 4.0.7
+        version: 4.0.7
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
   packages/client/unison-client:
     dependencies:
       '@unison/client-definitions':
@@ -230,8 +258,8 @@ importers:
         specifier: workspace:^
         version: link:../../client/client-definitions
       eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: 4.0.7
+        version: 4.0.7
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -264,8 +292,8 @@ importers:
         specifier: 2.1.0-0
         version: 2.1.0-0
       eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: 4.0.7
+        version: 4.0.7
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -289,8 +317,8 @@ importers:
         specifier: ^3.2.6
         version: 3.2.6
       eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: 4.0.7
+        version: 4.0.7
       nconf:
         specifier: ^0.13.0
         version: 0.13.0
@@ -2073,6 +2101,9 @@ packages:
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
 
+  '@types/stringify-object@4.0.5':
+    resolution: {integrity: sha512-TzX5V+njkbJ8iJ0mrj+Vqveep/1JBH4SSA3J2wYrE1eUrOhdsjTBCb0kao4EquSQ8KgPpqY4zSVP2vCPWKBElg==}
+
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
@@ -3646,6 +3677,10 @@ packages:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
 
+  get-own-enumerable-keys@1.0.0:
+    resolution: {integrity: sha512-PKsK2FSrQCyxcGHsGrLDcK0lx+0Ke+6e8KFFozA9/fIQLhQzPaRvJFdcz7+Axg3jUH/Mq+NI4xa5u/UT2tQskA==}
+    engines: {node: '>=14.16'}
+
   get-package-type@0.1.0:
     resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
     engines: {node: '>=8.0.0'}
@@ -3945,6 +3980,10 @@ packages:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
 
+  is-obj@3.0.0:
+    resolution: {integrity: sha512-IlsXEHOjtKhpN8r/tRFj2nDyTmHvcfNeu/nrRIcXE17ROeatXchkojffa1SpdqW4cr/Fj6QkEf/Gn4zf6KKvEQ==}
+    engines: {node: '>=12'}
+
   is-plain-obj@3.0.0:
     resolution: {integrity: sha512-gwsOE28k+23GP1B6vFl1oVh/WOzmawBrKwo5Ev6wMKzPkaXaCDIQKzLnvsA42DRlbVTWorkgTKIviAKCWkfUwA==}
     engines: {node: '>=10'}
@@ -3958,6 +3997,10 @@ packages:
 
   is-promise@2.2.2:
     resolution: {integrity: sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==}
+
+  is-regexp@3.1.0:
+    resolution: {integrity: sha512-rbku49cWloU5bSMI+zaRaXdQHXnthP6DZ/vLnfdSKyL4zUzuWnomtOEiZZOd+ioQ+avFo/qau3KPTc7Fjy1uPA==}
+    engines: {node: '>=12'}
 
   is-typedarray@1.0.0:
     resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
@@ -5685,6 +5728,10 @@ packages:
   string_decoder@1.3.0:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
 
+  stringify-object@5.0.0:
+    resolution: {integrity: sha512-zaJYxz2FtcMb4f+g60KsRNFOpVMUyuJgA51Zi5Z1DOTC3S59+OQiVOzE9GZt0x72uBGWKsQIuBKeF9iusmKFsg==}
+    engines: {node: '>=14.16'}
+
   strip-ansi@6.0.1:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
     engines: {node: '>=8'}
@@ -5748,6 +5795,12 @@ packages:
     resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
+
+  swc-loader@0.1.15:
+    resolution: {integrity: sha512-cn1WPIeQJvXM4bbo3OwdEIapsQ4uUGOfyFj0h2+2+brT0k76DCGnZXDE2KmcqTd2JSQ+b61z2NPMib7eEwMYYw==}
+    peerDependencies:
+      '@swc/core': ^1.2.52
+      webpack: '>=2'
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -8549,6 +8602,8 @@ snapshots:
 
   '@types/stack-utils@2.0.3': {}
 
+  '@types/stringify-object@4.0.5': {}
+
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 18.16.20
@@ -10348,6 +10403,8 @@ snapshots:
       hasown: 2.0.2
       math-intrinsics: 1.1.0
 
+  get-own-enumerable-keys@1.0.0: {}
+
   get-package-type@0.1.0: {}
 
   get-proto@1.0.1:
@@ -10642,6 +10699,8 @@ snapshots:
 
   is-number@7.0.0: {}
 
+  is-obj@3.0.0: {}
+
   is-plain-obj@3.0.0: {}
 
   is-plain-object@2.0.4:
@@ -10651,6 +10710,8 @@ snapshots:
   is-potential-custom-element-name@1.0.1: {}
 
   is-promise@2.2.2: {}
+
+  is-regexp@3.1.0: {}
 
   is-typedarray@1.0.0: {}
 
@@ -12595,6 +12656,12 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
+  stringify-object@5.0.0:
+    dependencies:
+      get-own-enumerable-keys: 1.0.0
+      is-obj: 3.0.0
+      is-regexp: 3.1.0
+
   strip-ansi@6.0.1:
     dependencies:
       ansi-regex: 5.0.1
@@ -12657,6 +12724,12 @@ snapshots:
       css-what: 6.1.0
       csso: 5.0.5
       picocolors: 1.1.1
+
+  swc-loader@0.1.15(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack@5.98.0):
+    dependencies:
+      '@swc/core': 1.5.29(@swc/helpers@0.5.17)
+      loader-utils: 2.0.4
+      webpack: 5.98.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4)
 
   symbol-tree@3.2.4: {}
 

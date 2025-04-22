@@ -78,7 +78,7 @@ export default tseslint.config(
   },
   {
     files: ["**/*.ts"],
-    ignores: ["**/*.spec.ts", "**/*.d.ts"],
+    ignores: ["**/*.spec.ts", "**/*.d.ts", "**/vite.config.ts"],
     languageOptions: {
       parserOptions: {
         projectService: true,

@@ -1,0 +1,47 @@
+import { IDecoder, IEncoder } from "src/serialization/index.js";
+import { DDSContext } from "./DDSContext.js";
+
+export abstract class DDS
+{
+  protected constructor(readonly attributes: DDSAttributes)
+  {
+  }
+
+  private _context: DDSContext | null = null;
+
+  public isAttached()
+  {
+    return this._context !== null;
+  }
+
+  get id() 
+  {
+    return this._context?.id;
+  }
+
+  protected get runtime() 
+  {
+    return this._context?.runtime;
+  }
+
+  public attach(context: DDSContext)
+  {
+    this._context = context;
+  }
+
+  public detach()
+  {
+    this._context = null;
+  }
+
+  abstract createSummary(encoder: IEncoder): unknown;
+
+  abstract load(summary: unknown, decoder: IDecoder): void;
+
+  public abstract process(contents: unknown, local: boolean, decoder: IDecoder): void;
+}
+
+export interface DDSAttributes
+{
+  readonly type: string;
+}

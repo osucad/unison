@@ -1,6 +1,7 @@
 {
-  "name": "@unison/dds-base",
+  "name": "@unison-client/core",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -14,13 +15,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "!**/*.tsbuildinfo"
-  ],
   "dependencies": {
-    "@unison/client-definitions": "workspace:^",
     "eventemitter3": "4.0.7",
+    "reflect-metadata": "^0.2.2",
     "tslib": "^2.3.0"
   },
   "nx": {

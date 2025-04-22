@@ -1,0 +1,17 @@
+{
+  "name": "@unison/client-playground",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@unison-client/core": "workspace:^",
+    "stringify-object": "^5.0.0"
+  },
+  "nx": {
+    "tags": [
+      "scope:client"
+    ]
+  },
+  "devDependencies": {
+    "@types/stringify-object": "^4.0.5"
+  }
+}
