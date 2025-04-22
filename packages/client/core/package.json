@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "eventemitter3": "^5.0.1",
+    "eventemitter3": "4.0.7",
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.3.0"
   },
