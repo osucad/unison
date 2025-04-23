@@ -1,5 +1,5 @@
-import { IDocumentDelta } from "./protocol";
-import { ConnectDocumentResult, IConnect } from "./connect";
+import { IDocumentDelta } from "./protocol.js";
+import { ConnectDocumentResult, IConnect } from "./connect.js";
 
 export interface ClientMessages 
 {

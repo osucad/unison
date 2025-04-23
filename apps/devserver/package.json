@@ -2,6 +2,7 @@
   "name": "@unison/devserver",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@unison/shared-definitions": "workspace:^",
     "@unison-server/shared-definitions": "workspace:^",

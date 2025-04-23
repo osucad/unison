@@ -6,7 +6,9 @@
       "node"
     ],
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "moduleResolution": "bundler",
+    "module": "esnext"
   },
   "include": [
     "src/**/*.ts"

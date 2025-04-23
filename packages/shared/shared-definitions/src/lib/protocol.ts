@@ -1,4 +1,4 @@
-import { IClient } from "./client";
+import { IClient } from "./client.js";
 
 export enum MessageType 
 {

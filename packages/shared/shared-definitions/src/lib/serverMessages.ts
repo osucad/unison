@@ -1,4 +1,4 @@
-import { ISequencedDocumentMessage } from "./protocol";
+import { ISequencedDocumentMessage } from "./protocol.js";
 
 export interface ServerMessages 
 {

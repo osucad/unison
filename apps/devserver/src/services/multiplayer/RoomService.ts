@@ -1,7 +1,7 @@
 import { ISequencedDocumentMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { IProducer } from "../../multiplayer/IProducer";
-import { Room, RawOperationMessage } from "./Room";
+import { Room } from "./Room";
 import { RoomConnection } from "./RoomConnection";
 
 export interface RoomServiceEvents
