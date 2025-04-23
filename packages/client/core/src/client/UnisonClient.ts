@@ -1,12 +1,9 @@
-import { DeltaManager } from "../runtime/DeltaManager.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "../runtime/DocumentSchema.js";
 import { Document, IDocumentOptions } from "../runtime/index.js";
 import { ConnectionFactory } from "../services/ConnectionFactory.js";
-import { StorageService } from "./StorageService.js";
 import { InsecureTokenProvider } from "./InsecureTokenProvider.js";
+import { StorageService } from "./StorageService.js";
 import { TokenProvider } from "./TokenProvider.js";
-import { io, Socket } from "socket.io-client";
-import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/shared-definitions";
 
 export class UnisonClient 
 {

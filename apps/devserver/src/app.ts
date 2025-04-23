@@ -1,7 +1,7 @@
+import compression from "compression";
 import cors from "cors";
 import express from "express";
 import http from "node:http";
-import compression from "compression";
 import { Server } from "socket.io";
 import { handleWebSockets } from "./multiplayer/websocket";
 import { createRoutes } from "./routes";

@@ -1,4 +1,4 @@
-import { DocumentOperation, RuntimeOperation, SequencedMessage } from "@unison/shared-definitions";
+import { RuntimeOperation, SequencedMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { DDS, DDSAttributes } from "../dds/DDS.js";
 import { DDSContext } from "../dds/DDSContext.js";

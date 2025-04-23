@@ -1,6 +1,5 @@
 import { IDocumentSummary } from "../runtime/index.js";
 import { TokenProvider } from "./TokenProvider.js";
-import { ScopeTypes } from "@unison/shared-definitions";
 
 export class StorageService
 {

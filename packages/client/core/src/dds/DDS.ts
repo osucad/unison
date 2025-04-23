@@ -1,6 +1,6 @@
+import { EventEmitter } from "eventemitter3";
 import { IDecoder, IEncoder } from "src/serialization/index.js";
 import { DDSContext } from "./DDSContext.js";
-import { EventEmitter } from "eventemitter3";
 
 export interface DDSEvents 
 {

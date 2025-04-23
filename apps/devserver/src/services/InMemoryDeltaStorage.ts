@@ -1,4 +1,4 @@
-import { SequencedMessage, DocumentMessage } from "@unison/shared-definitions";
+import { DocumentMessage, SequencedMessage } from "@unison/shared-definitions";
 import { IDeltaStorage } from "./IDeltaStorage";
 
 export class InMemoryDeltaStorage implements IDeltaStorage
