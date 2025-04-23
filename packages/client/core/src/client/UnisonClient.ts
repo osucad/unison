@@ -1,3 +1,4 @@
+import { DeltaConnection } from "../runtime/DeltaConnection.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "../runtime/DocumentSchema.js";
 import { Document, IDocumentOptions } from "../runtime/index.js";
 import { StorageService } from "./StorageService.js";
@@ -40,9 +41,9 @@ export class UnisonClient
 
     await waitForConnect(socket);
 
-    const { token } = await this.tokenProvider.getToken(documentId, [ScopeTypes.Read, ScopeTypes.Write]);
+    const deltas = new DeltaConnection(documentId, socket);
 
-    socket.onAny(console.log);
+    const { token } = await this.tokenProvider.getToken(documentId, [ScopeTypes.Read, ScopeTypes.Write]);
 
     const result = await socket.emitWithAck("connectDocument", {
       version: PROTOCOL_VERSION,
@@ -53,7 +54,7 @@ export class UnisonClient
     if (!result.success)
       throw new Error(`Failed to connect to document: ${result.error ?? "Unknown error"}`);
 
-    return Document.load(documentId, options, summary, socket);
+    return Document.load(documentId, options, summary, deltas);
   }
 }
 

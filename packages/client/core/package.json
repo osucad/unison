@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@unison/shared-definitions": "workspace:^",
+    "async": "^3.2.6",
+    "double-ended-queue": "2.1.0-0",
     "eventemitter3": "4.0.7",
     "reflect-metadata": "^0.2.2",
     "socket.io-client": "^4.8.1",
@@ -26,5 +28,9 @@
     "tags": [
       "scope:client"
     ]
+  },
+  "devDependencies": {
+    "@types/async": "^3.2.24",
+    "@types/double-ended-queue": "^2.1.7"
   }
 }

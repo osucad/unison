@@ -1,9 +1,9 @@
+import { IOperation, MessageType } from "@unison/shared-definitions";
 import { DDS, DDSAttributes, DDSFactory } from "../dds/index.js";
+import { nn } from "../utils/nn.js";
+import { DeltaConnection } from "./DeltaConnection.js";
 import { DocumentRuntime } from "./DocumentRuntime.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "./DocumentSchema.js";
-import { nn } from "../utils/nn.js";
-import { Socket } from "socket.io-client";
-import { ClientMessages, IOperation, MessageType, ServerMessages } from "@unison/shared-definitions";
 
 export interface IDocumentOptions<T extends DocumentSchema> 
 {
@@ -61,7 +61,10 @@ export class Document<T extends object = object>
     return document;
   }
 
-  private load(schema: DocumentSchema, summary: IDocumentSummary, socket: Socket<ServerMessages, ClientMessages>) 
+  private load(
+    schema: DocumentSchema,
+    summary: IDocumentSummary,
+    deltas: DeltaConnection) 
   {
     this.runtime.load(summary.entries);
 
@@ -79,25 +82,9 @@ export class Document<T extends object = object>
 
     this.root = Object.freeze(root) as T;
 
-    socket.on("deltas", (documentId, deltas) => 
-    {
-      if (documentId !== this.id)
-        return;
-
-      console.log("received deltas", deltas);
-
-      for (const delta of deltas) 
-      {
-        const local = delta.clientId === socket.id;
-
-        if (delta.type === MessageType.Delta)
-          this.runtime.process(delta.operation as IOperation[], local);
-      }
-    });
-
     this.runtime.on("localOp", (dds, op) => 
     {
-      socket.emit("submitOps", nn(this.id), {
+      deltas.submitOps({
         clientSequenceNumber: 0,
         type: MessageType.Delta,
         contents: [
@@ -108,19 +95,29 @@ export class Document<T extends object = object>
         ]
       });
     });
+
+    deltas.on("deltas", (message, local) => 
+    {
+      if (message.type === MessageType.Delta) 
+      {
+        this.runtime.process(message.operation as IOperation[], local);
+      }
+    });
+
+    deltas.resume();
   }
 
   static load<T extends DocumentSchema>(
     documentId: string,
     options: IDocumentOptions<T>,
     summary: IDocumentSummary,
-    socket: Socket<ServerMessages, ClientMessages>
+    deltas: DeltaConnection,
   ) 
   {
     const document = new Document<UnwrapDocumentSchema<T>>(options.types);
 
     document.id = documentId;
-    document.load(options.schema, summary, socket);
+    document.load(options.schema, summary, deltas);
 
     return document;
   }
