@@ -198,49 +198,6 @@ importers:
         specifier: ^9.0.9
         version: 9.0.9
 
-  apps/unison-server:
-    dependencies:
-      '@types/jsonwebtoken':
-        specifier: ^9.0.9
-        version: 9.0.9
-      '@unison-server/shared-definitions':
-        specifier: workspace:^
-        version: link:../../packages/server/shared-definitions
-      '@unison/shared-definitions':
-        specifier: workspace:^
-        version: link:../../packages/shared/shared-definitions
-      async:
-        specifier: ^3.2.6
-        version: 3.2.6
-      compression:
-        specifier: ^1.8.0
-        version: 1.8.0
-      cors:
-        specifier: ^2.8.5
-        version: 2.8.5
-      eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-      neverthrow:
-        specifier: ^8.2.0
-        version: 8.2.0
-      socket.io:
-        specifier: ^4.8.1
-        version: 4.8.1(bufferutil@4.0.1)(utf-8-validate@6.0.5)
-    devDependencies:
-      '@types/async':
-        specifier: ^3.2.24
-        version: 3.2.24
-      '@types/compression':
-        specifier: ^1.7.5
-        version: 1.7.5
-      '@types/cors':
-        specifier: ^2.8.17
-        version: 2.8.17
-
   packages/client/client-definitions:
     dependencies:
       '@unison/shared-definitions':
@@ -276,67 +233,6 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
-
-  packages/client/unison-client:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../client-definitions
-      '@unison/dds-base':
-        specifier: workspace:^
-        version: link:../../dds/dds-base
-      '@unison/shared-definitions':
-        specifier: workspace:^
-        version: link:../../shared/shared-definitions
-      axios:
-        specifier: ^1.6.0
-        version: 1.8.4
-      socket.io-client:
-        specifier: ^4.8.1
-        version: 4.8.1(bufferutil@4.0.1)(utf-8-validate@6.0.5)
-
-  packages/dds/counter:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:*
-        version: link:../../client/client-definitions
-      '@unison/dds-base':
-        specifier: workspace:*
-        version: link:../dds-base
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/dds/dds-base:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../../client/client-definitions
-      eventemitter3:
-        specifier: 4.0.7
-        version: 4.0.7
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  packages/dds/object:
-    dependencies:
-      '@unison/client-definitions':
-        specifier: workspace:^
-        version: link:../../client/client-definitions
-      '@unison/dds-base':
-        specifier: workspace:^
-        version: link:../dds-base
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-    devDependencies:
-      '@unison/client-test-utils':
-        specifier: workspace:^
-        version: link:../../client/client-test-utils
 
   packages/server/local-server:
     dependencies:

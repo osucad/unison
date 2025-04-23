@@ -137,7 +137,7 @@ export class Room extends EventEmitter<RoomEvents>
       clientId: message.clientId,
       sequenceNumber,
       clientSequenceNumber: operation.clientSequenceNumber,
-      contents: operation.contents,
+      operation: operation.contents,
       type: operation.type,
     };
 
