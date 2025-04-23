@@ -1,4 +1,7 @@
+import { StorageService } from "../client/StorageService.js";
+import { TokenProvider } from "../client/TokenProvider.js";
 import { DDS, DDSAttributes, DDSFactory } from "../dds/index.js";
+import { ConnectionFactory } from "../services/ConnectionFactory.js";
 import { nn } from "../utils/nn.js";
 import { DeltaManager } from "./DeltaManager.js";
 import { DocumentRuntime } from "./DocumentRuntime.js";
@@ -14,13 +17,30 @@ export class Document<T extends object = object>
 {
   root!: T;
 
-  readonly runtime: DocumentRuntime;
+  runtime!: DocumentRuntime;
+
+  private deltaManager: DeltaManager;
+  private storageService: StorageService;
 
   id: string | null = null;
 
-  constructor(types: readonly DDSFactory[]) 
+  constructor(
+    {
+      storageService,
+      tokenProvider,
+      connectionFactory,
+      ddsTypes,
+    }: {
+      storageService: StorageService;
+      tokenProvider: TokenProvider;
+      connectionFactory: ConnectionFactory;
+      ddsTypes: readonly DDSFactory[];
+    }
+  ) 
   {
-    this.runtime = new DocumentRuntime(types);
+    this.runtime = new DocumentRuntime(ddsTypes);
+    this.storageService = storageService;
+    this.deltaManager = new DeltaManager(connectionFactory, tokenProvider);
   }
 
   private createDetached(schema: DocumentSchema) 
@@ -51,21 +71,44 @@ export class Document<T extends object = object>
     };
   }
 
-  static createDetached<T extends DocumentSchema>(options: IDocumentOptions<T>): Document<UnwrapDocumentSchema<T>> 
+  static createDetached<T extends DocumentSchema>(
+    {
+      schema,
+      ddsTypes,
+      connectionFactory,
+      tokenProvider,
+      storageService,
+    }: {
+      schema: T;
+      ddsTypes: readonly DDSFactory[];
+      connectionFactory: ConnectionFactory;
+      tokenProvider: TokenProvider;
+      storageService: StorageService;
+    }
+  ): Document<UnwrapDocumentSchema<T>>
   {
-    const document = new Document<UnwrapDocumentSchema<T>>(options.types);
+    const document = new Document({
+      ddsTypes,
+      connectionFactory,
+      tokenProvider,
+      storageService,
+    });
 
-    document.createDetached(options.schema);
+    document.createDetached(schema);
 
-    return document;
+    return document as  Document<UnwrapDocumentSchema<T>>;
   }
 
-  private load(
+  private async load(
+    documentId: string,
     schema: DocumentSchema,
-    summary: IDocumentSummary,
-    deltas: DeltaManager) 
+  ) 
   {
+    const summary = await this.storageService.getSummary(documentId);
+
     this.runtime.load(summary.entries);
+
+    const connectP = this.deltaManager.connect(documentId);
 
     const root: Record<string, DDS> = {};
 
@@ -81,9 +124,9 @@ export class Document<T extends object = object>
 
     this.root = Object.freeze(root) as T;
 
-    this.runtime.on("localOp", (dds, op) => 
+    this.runtime.on("localOp", (dds, op) =>
     {
-      deltas.submitOps({
+      this.deltaManager.submitOps({
         clientSequenceNumber: 0,
         type: "op",
         contents: [
@@ -95,13 +138,13 @@ export class Document<T extends object = object>
       });
     });
 
-    deltas.on("deltas", (message, local) => 
+    this.deltaManager.on("deltas", (message, local) =>
     {
       const operation = message.contents;
 
       if (operation.type === "op")
       {
-        for (const op of operation.contents) 
+        for (const op of operation.contents)
         {
           this.runtime.process({
             ...message,
@@ -112,22 +155,37 @@ export class Document<T extends object = object>
       }
     });
 
-    deltas.resume();
+    this.deltaManager.resume();
   }
 
-  static load<T extends DocumentSchema>(
-    documentId: string,
-    options: IDocumentOptions<T>,
-    summary: IDocumentSummary,
-    deltas: DeltaManager,
+  static async load<T extends DocumentSchema>(
+    {
+      documentId,
+      schema,
+      ddsTypes,
+      connectionFactory,
+      storageService,
+      tokenProvider,
+    }: {
+      documentId: string;
+      schema: T;
+      ddsTypes: readonly DDSFactory[];
+      connectionFactory: ConnectionFactory;
+      storageService: StorageService;
+      tokenProvider: TokenProvider;
+    },
   ) 
   {
-    const document = new Document<UnwrapDocumentSchema<T>>(options.types);
+    const document = new Document({
+      storageService,
+      tokenProvider,
+      connectionFactory,
+      ddsTypes,
+    });
 
-    document.id = documentId;
-    document.load(options.schema, summary, deltas);
+    await document.load(documentId, schema);
 
-    return document;
+    return document as Document<UnwrapDocumentSchema<T>>;
   }
 }
 

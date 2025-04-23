@@ -1,6 +1,7 @@
 import { DeltaManager } from "../runtime/DeltaManager.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "../runtime/DocumentSchema.js";
 import { Document, IDocumentOptions } from "../runtime/index.js";
+import { ConnectionFactory } from "../services/ConnectionFactory.js";
 import { StorageService } from "./StorageService.js";
 import { InsecureTokenProvider } from "./InsecureTokenProvider.js";
 import { TokenProvider } from "./TokenProvider.js";
@@ -13,14 +14,22 @@ export class UnisonClient
   {
     this.tokenProvider = new InsecureTokenProvider();
     this.storageService = new StorageService(this.endpoint, this.tokenProvider);
+    this.connectionFactory = new ConnectionFactory(this.endpoint);
   }
 
   private readonly tokenProvider: TokenProvider;
   private readonly storageService: StorageService;
+  private readonly connectionFactory: ConnectionFactory;
 
   async createDocument<T extends DocumentSchema>(options: IDocumentOptions<T>): Promise<Document<UnwrapDocumentSchema<T>>>
   {
-    const document = Document.createDetached(options);
+    const document = Document.createDetached({
+      schema: options.schema,
+      ddsTypes: options.types,
+      connectionFactory: this.connectionFactory,
+      storageService: this.storageService,
+      tokenProvider: this.tokenProvider,
+    });
 
     const summary = document.createSummary();
 
@@ -33,36 +42,13 @@ export class UnisonClient
 
   async load<T extends DocumentSchema>(documentId: string, options: IDocumentOptions<T>)
   {
-    const summary = await this.storageService.getSummary(documentId);
-
-    const socket: Socket<ServerMessages, ClientMessages> = io(this.endpoint, {
-      transports: ["websocket"]
-    });
-
-    await waitForConnect(socket);
-
-    const deltas = new DeltaManager(documentId, socket);
-
-    const { token } = await this.tokenProvider.getToken(documentId);
-
-    const result = await socket.emitWithAck("connectDocument", {
-      version: PROTOCOL_VERSION,
+    return Document.load({
       documentId,
-      token
+      schema: options.schema,
+      ddsTypes: options.types,
+      connectionFactory: this.connectionFactory,
+      storageService: this.storageService,
+      tokenProvider: this.tokenProvider,
     });
-
-    if (!result.success)
-      throw new Error(`Failed to connect to document: ${result.error ?? "Unknown error"}`);
-
-    return Document.load(documentId, options, summary, deltas);
   }
-}
-
-function waitForConnect(socket: Socket)
-{
-  return new Promise<void>((resolve, reject) => 
-  {
-    socket.once("connect", () => resolve());
-    socket.once("connect_error", reject);
-  });
 }
