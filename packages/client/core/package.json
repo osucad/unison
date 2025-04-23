@@ -16,8 +16,10 @@
     }
   },
   "dependencies": {
+    "@unison/shared-definitions": "workspace:^",
     "eventemitter3": "4.0.7",
     "reflect-metadata": "^0.2.2",
+    "socket.io-client": "^4.8.1",
     "tslib": "^2.3.0"
   },
   "nx": {

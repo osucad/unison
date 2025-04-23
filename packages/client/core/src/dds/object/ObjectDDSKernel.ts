@@ -73,6 +73,8 @@ export class ObjectDDSKernel
   {
     Reflect.set(this.target, property.key, newValue);
 
+    this.target.emit("changed", property.key, newValue);
+
     if (!this._context)
       return;
 
@@ -118,6 +120,8 @@ export class ObjectDDSKernel
 
   public process(message: IObjectMessage, local: boolean, decoder: IDecoder)
   {
+    console.log("process", message, local);
+
     if (message.type !== "set")
       return;
 
@@ -145,6 +149,7 @@ export class ObjectDDSKernel
       const value = decoder.decode(message.values[key]);
 
       Reflect.set(target, key, value);
+      target.emit("changed", key, value);
     }
   }
 }

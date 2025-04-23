@@ -1,0 +1,84 @@
+{
+  "name": "@unison/devserver",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@unison/shared-definitions": "workspace:^",
+    "@unison-server/shared-definitions": "workspace:^",
+    "async": "^3.2.6",
+    "compression": "^1.8.0",
+    "cors": "^2.8.5",
+    "eventemitter3": "^5.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "neverthrow": "^8.2.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/async": "^3.2.24",
+    "@types/compression": "^1.7.5",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.9"
+  },
+  "nx": {
+    "name": "devserver",
+    "tags": ["scope:server"],
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "apps/devserver/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "apps/devserver/src/main.ts",
+          "tsConfig": "apps/devserver/tsconfig.app.json",
+          "assets": [
+            "apps/devserver/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "devserver:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "devserver:build:development"
+          },
+          "production": {
+            "buildTarget": "devserver:build:production"
+          }
+        }
+      }
+    }
+  }
+}

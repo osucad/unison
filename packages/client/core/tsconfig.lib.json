@@ -10,5 +10,9 @@
     "lib": ["DOM"]
   },
   "include": ["src/**/*.ts"],
-  "references": []
+  "references": [
+    {
+      "path": "../../shared/shared-definitions/tsconfig.lib.json"
+    }
+  ]
 }

@@ -1,9 +1,14 @@
 import { IDecoder, IEncoder } from "../../serialization/index.js";
-import { DDS, DDSAttributes } from "../DDS.js";
+import { DDS, DDSAttributes, DDSEvents } from "../DDS.js";
 import { DDSContext } from "../DDSContext.js";
 import { IObjectDDSSummary, IObjectMessage, ObjectDDSKernel } from "./ObjectDDSKernel.js";
 
-export abstract class ObjectDDS extends DDS 
+export interface ObjectEvents extends DDSEvents 
+{
+  changed(key: string, newValue: unknown): void;
+}
+
+export abstract class ObjectDDS extends DDS<ObjectEvents>
 {
   readonly kernel: ObjectDDSKernel;
 

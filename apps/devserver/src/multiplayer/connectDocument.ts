@@ -28,7 +28,7 @@ export async function connectDocument(
   if (!token.scopes.includes(ScopeTypes.Read))
     return err(invalidToken());
 
-  const connection = await roomService.getConnection(client.id, documentId);
+  const connection = await roomService.getConnection(documentId, client.id);
 
   client.join(documentId);
 

@@ -13,6 +13,7 @@ export async function createApp(resources: IUnisonServerResources)
   const app = express();
   app.use(cors());
   app.use(compression());
+  app.use(express.json());
 
   const server = http.createServer(app);
   const io = new Server(server, {

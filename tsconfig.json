@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/unison-server"
-    },
-    {
       "path": "./packages/server/message-sequencer"
     },
     {
@@ -47,6 +44,9 @@
     },
     {
       "path": "./apps/client-playground"
+    },
+    {
+      "path": "./apps/devserver"
     }
   ]
 }

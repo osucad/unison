@@ -5,3 +5,4 @@ packages:
   - "packages/client/*"
   - "packages/dds/*"
   - "packages/shared/*"
+  - "packages/client/apps/*"

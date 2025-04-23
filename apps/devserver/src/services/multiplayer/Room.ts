@@ -84,7 +84,7 @@ export class Room extends EventEmitter<RoomEvents>
       messagesToProduce.push({
         clientId: message.clientId,
         clientSequenceNumber: message.operation.clientSequenceNumber,
-        contents: message.operation.contents,
+        operation: message.operation.contents,
         sequenceNumber,
         type: message.operation.type,
       });

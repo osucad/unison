@@ -1,10 +1,18 @@
 import { IDecoder, IEncoder } from "src/serialization/index.js";
 import { DDSContext } from "./DDSContext.js";
+import { EventEmitter } from "eventemitter3";
 
-export abstract class DDS
+export interface DDSEvents 
+{
+  attach(): void;
+  detach(): void;
+}
+
+export abstract class DDS<TEvents extends DDSEvents = any> extends EventEmitter<TEvents>
 {
   protected constructor(readonly attributes: DDSAttributes)
   {
+    super();
   }
 
   private _context: DDSContext | null = null;

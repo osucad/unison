@@ -42,10 +42,9 @@ export interface IClientLeave extends IDocumentMessage
   };
 }
 
-export interface IDocumentDelta extends IDocumentMessage
+export interface IDocumentDelta extends IDocumentMessage<IOperation[]>
 {
   type: MessageType.Delta;
-  ops: IOperation[];
 }
 
 export interface IOperation

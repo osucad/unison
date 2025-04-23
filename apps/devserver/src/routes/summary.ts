@@ -31,7 +31,7 @@ export function createSummaryRoutes({ tokenVerifier, documentStorage }: IUnisonS
 
       await documentStorage.appendSummary(documentId, summary);
 
-      res.status(301).json({
+      res.status(201).json({
         id: documentId,
         sequenceNumber: summary.sequenceNumber
       });

@@ -11,8 +11,10 @@ export function handleWebSockets(
 {
   resources.roomService.on(
     "deltasProduced",
-    (documentId, deltas) =>
-      io.to(documentId).emit("deltas", documentId, deltas)
+    (documentId, deltas) => 
+    {
+      io.to(documentId).emit("deltas", documentId, deltas);
+    }
   );
 
   io.on("connect", async client => 

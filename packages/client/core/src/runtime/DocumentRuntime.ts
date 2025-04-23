@@ -6,6 +6,7 @@ import { nn } from "../utils/nn.js";
 import { IdGenerator } from "./IdGenerator.js";
 import { OpDecoder } from "./OpDecoder.js";
 import { RuntimeEncoder } from "./RuntimeEncoder.js";
+import { IObjectSummary } from "./Document.js";
 
 export interface DocumentRuntimeEvents 
 {
@@ -154,5 +155,58 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
     }
 
     flushLateInitFns();
+  }
+
+  createSummary(
+    entryPoint: readonly DDS[]
+  ): Record<string, IObjectSummary>
+  {
+    const remainingObjects: DDS[] = [...entryPoint];
+    const trackedObjects = new Set<DDS>(entryPoint);
+
+    const encoder = new RuntimeEncoder(this);
+
+    encoder.handleEncoded = (dds) => 
+    {
+      if (!trackedObjects.has(dds)) 
+      {
+        trackedObjects.add(dds);
+        remainingObjects.push(dds);
+      }
+    };
+
+    const summaries: Record<string, IObjectSummary> = {};
+
+    while(remainingObjects.length > 0) 
+    {
+      const dds = nn(remainingObjects.shift());
+
+      summaries[nn(dds.id)] = {
+        attributes: structuredClone(dds.attributes),
+        contents: dds.createSummary(encoder)
+      };
+    }
+
+    return summaries;
+  }
+
+  load(entries: Record<string, IObjectSummary>) 
+  {
+    const decoder = new OpDecoder(this);
+
+    for (const [id, summary] of Object.entries(entries)) 
+    {
+      const dds = this._create(summary.attributes);
+
+      decoder.objects.set(id, dds);
+    }
+
+    for (const [id, summary] of Object.entries(entries)) 
+    {
+      const dds = nn(decoder.objects.get(id));
+
+      dds.load(summary.contents, decoder);
+      this._attach(dds, id);
+    }
   }
 }
