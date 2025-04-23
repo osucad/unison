@@ -5,24 +5,27 @@ import { Socket } from "socket.io-client";
 
 export class DeltaConnection extends EventEmitter<{
   deltas(deltas: ISequencedDocumentMessage, local: boolean): void;
-}>
+}> 
 {
   private readonly queue = new Dequeue<ISequencedDocumentMessage>();
 
   constructor(
     private readonly documentId: string,
     private readonly socket: Socket<ServerMessages, ClientMessages>,
-  )
+  ) 
   {
     super();
 
-    socket.on("deltas", (documentId, deltas) =>
+    socket.on("deltas", (documentId, deltas) => 
     {
       if (documentId !== this.documentId)
         return;
 
-      if (this.paused)
+      if (this.paused) 
+      {
         this.queue.push(...deltas);
+        return;
+      }
 
       for (const msg of deltas)
         this.emit("deltas", msg, msg.clientId === socket.id);
@@ -37,7 +40,7 @@ export class DeltaConnection extends EventEmitter<{
 
     let msg = this.queue.dequeue();
 
-    while(msg !== undefined)
+    while (msg !== undefined) 
     {
       this.emit("deltas", msg, msg.clientId === this.socket.id);
       msg = this.queue.dequeue();
@@ -49,7 +52,7 @@ export class DeltaConnection extends EventEmitter<{
     this.paused = true;
   }
 
-  submitOps(delta: IDocumentDelta)
+  submitOps(delta: IDocumentDelta) 
   {
     this.socket.emit("submitOps", this.documentId, delta);
   }
