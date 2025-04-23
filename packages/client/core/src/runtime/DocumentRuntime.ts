@@ -7,18 +7,13 @@ import { IdGenerator } from "./IdGenerator.js";
 import { OpDecoder } from "./OpDecoder.js";
 import { RuntimeEncoder } from "./RuntimeEncoder.js";
 import { IObjectSummary } from "./Document.js";
+import { IOperation } from "@unison/shared-definitions";
 
 export interface DocumentRuntimeEvents 
 {
   localOp(dds: DDS | null, op: unknown): void;
 
   attach(object: DDS): void;
-}
-
-export interface IDocumentOperation 
-{
-  target: string | null;
-  contents: unknown;
 }
 
 export interface ICreateObjectOperation 
@@ -112,7 +107,7 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
     this.emit("localOp", dds, op);
   }
 
-  public process(ops: IDocumentOperation[], local: boolean)
+  public process(ops: IOperation[], local: boolean)
   {
     const decoder = new OpDecoder(this);
     const lateInitFns: (() => void)[] = [];
