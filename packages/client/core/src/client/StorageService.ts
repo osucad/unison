@@ -1,19 +1,19 @@
 import { IDocumentSummary } from "../runtime/index.js";
-import { ITokenProvider } from "./ITokenProvider.js";
+import { TokenProvider } from "./TokenProvider.js";
 import { ScopeTypes } from "@unison/shared-definitions";
 
 export class StorageService
 {
   constructor(
     readonly endpoint: string,
-    private readonly tokenProvider: ITokenProvider,
+    private readonly tokenProvider: TokenProvider,
   )
   {
   }
 
   async createDocument(summary: IDocumentSummary): Promise<{ id: string }>
   {
-    const { token } = await this.tokenProvider.getToken(undefined, [ScopeTypes.Create]);
+    const { token } = await this.tokenProvider.getToken();
 
     const response = await fetch(`${this.endpoint}/documents`, {
       method: "POST",
@@ -29,7 +29,7 @@ export class StorageService
 
   async getSummary(documentId: string, sequenceNumber: number | "latest" = "latest"): Promise<IDocumentSummary>
   {
-    const { token } = await this.tokenProvider.getToken(documentId, [ScopeTypes.Read]);
+    const { token } = await this.tokenProvider.getToken(documentId);
 
     const response = await fetch(`${this.endpoint}/documents/${documentId}/summary/${sequenceNumber}`, {
       method: "GET",

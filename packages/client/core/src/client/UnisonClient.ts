@@ -3,7 +3,7 @@ import { DocumentSchema, UnwrapDocumentSchema } from "../runtime/DocumentSchema.
 import { Document, IDocumentOptions } from "../runtime/index.js";
 import { StorageService } from "./StorageService.js";
 import { InsecureTokenProvider } from "./InsecureTokenProvider.js";
-import { ITokenProvider } from "./ITokenProvider.js";
+import { TokenProvider } from "./TokenProvider.js";
 import { io, Socket } from "socket.io-client";
 import { ClientMessages, PROTOCOL_VERSION, ScopeTypes, ServerMessages } from "@unison/shared-definitions";
 
@@ -15,7 +15,7 @@ export class UnisonClient
     this.storageService = new StorageService(this.endpoint, this.tokenProvider);
   }
 
-  private readonly tokenProvider: ITokenProvider;
+  private readonly tokenProvider: TokenProvider;
   private readonly storageService: StorageService;
 
   async createDocument<T extends DocumentSchema>(options: IDocumentOptions<T>): Promise<Document<UnwrapDocumentSchema<T>>>
@@ -43,7 +43,7 @@ export class UnisonClient
 
     const deltas = new DeltaManager(documentId, socket);
 
-    const { token } = await this.tokenProvider.getToken(documentId, [ScopeTypes.Read, ScopeTypes.Write]);
+    const { token } = await this.tokenProvider.getToken(documentId);
 
     const result = await socket.emitWithAck("connectDocument", {
       version: PROTOCOL_VERSION,
