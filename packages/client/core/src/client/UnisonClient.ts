@@ -1,4 +1,4 @@
-import { DeltaConnection } from "../runtime/DeltaConnection.js";
+import { DeltaManager } from "../runtime/DeltaManager.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "../runtime/DocumentSchema.js";
 import { Document, IDocumentOptions } from "../runtime/index.js";
 import { StorageService } from "./StorageService.js";
@@ -41,7 +41,7 @@ export class UnisonClient
 
     await waitForConnect(socket);
 
-    const deltas = new DeltaConnection(documentId, socket);
+    const deltas = new DeltaManager(documentId, socket);
 
     const { token } = await this.tokenProvider.getToken(documentId, [ScopeTypes.Read, ScopeTypes.Write]);
 

@@ -3,7 +3,7 @@ import Dequeue from "double-ended-queue";
 import { EventEmitter } from "eventemitter3";
 import { Socket } from "socket.io-client";
 
-export class DeltaConnection extends EventEmitter<{
+export class DeltaManager extends EventEmitter<{
   deltas(deltas: ISequencedDocumentMessage, local: boolean): void;
 }> 
 {

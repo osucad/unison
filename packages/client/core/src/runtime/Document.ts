@@ -1,7 +1,7 @@
 import { IOperation, MessageType } from "@unison/shared-definitions";
 import { DDS, DDSAttributes, DDSFactory } from "../dds/index.js";
 import { nn } from "../utils/nn.js";
-import { DeltaConnection } from "./DeltaConnection.js";
+import { DeltaManager } from "./DeltaManager.js";
 import { DocumentRuntime } from "./DocumentRuntime.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "./DocumentSchema.js";
 
@@ -64,7 +64,7 @@ export class Document<T extends object = object>
   private load(
     schema: DocumentSchema,
     summary: IDocumentSummary,
-    deltas: DeltaConnection) 
+    deltas: DeltaManager)
   {
     this.runtime.load(summary.entries);
 
@@ -111,7 +111,7 @@ export class Document<T extends object = object>
     documentId: string,
     options: IDocumentOptions<T>,
     summary: IDocumentSummary,
-    deltas: DeltaConnection,
+    deltas: DeltaManager,
   ) 
   {
     const document = new Document<UnwrapDocumentSchema<T>>(options.types);
