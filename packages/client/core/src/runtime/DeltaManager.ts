@@ -1,13 +1,13 @@
-import { ClientMessages, IDocumentDelta, ISequencedDocumentMessage, ServerMessages } from "@unison/shared-definitions";
+import { ClientMessages, DocumentMessage, DocumentOperation, SequencedMessage, ServerMessages } from "@unison/shared-definitions";
 import Dequeue from "double-ended-queue";
 import { EventEmitter } from "eventemitter3";
 import { Socket } from "socket.io-client";
 
 export class DeltaManager extends EventEmitter<{
-  deltas(deltas: ISequencedDocumentMessage, local: boolean): void;
+  deltas(deltas: SequencedMessage<DocumentMessage>, local: boolean): void;
 }> 
 {
-  private readonly queue = new Dequeue<ISequencedDocumentMessage>();
+  private readonly queue = new Dequeue<SequencedMessage<DocumentMessage>>();
 
   constructor(
     private readonly documentId: string,
@@ -52,8 +52,8 @@ export class DeltaManager extends EventEmitter<{
     this.paused = true;
   }
 
-  submitOps(delta: IDocumentDelta) 
+  submitOps(message: DocumentOperation)
   {
-    this.socket.emit("submitOps", this.documentId, delta);
+    this.socket.emit("submitOps", this.documentId, message);
   }
 }

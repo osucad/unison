@@ -1,9 +1,9 @@
-import { IUser } from "./user.js";
+import { UserDetails } from "./client.js";
 
-export interface IToken 
+export interface TokenClaims
 {
   documentId?: string;
-  user: IUser;
+  user: UserDetails;
   scopes: string[];
 }
 

@@ -1,7 +1,7 @@
-import { DocumentMessage, IClientLeave, ISequencedDocumentMessage, MessageType, ScopeTypes } from "@unison/shared-definitions";
+import { DocumentMessage, ScopeTypes, SequencedMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
-import { ClientManager } from "./ClientManager";
 import { IProducer } from "../../multiplayer/IProducer";
+import { ClientManager } from "./ClientManager";
 
 export interface RawOperationMessage 
 {
@@ -19,7 +19,7 @@ export class Room extends EventEmitter<RoomEvents>
 {
   constructor(
     readonly documentId: string,
-    readonly deltasProducer: IProducer<ISequencedDocumentMessage>
+    readonly deltasProducer: IProducer<SequencedMessage<DocumentMessage>>
   ) 
   {
     super();
@@ -31,13 +31,13 @@ export class Room extends EventEmitter<RoomEvents>
 
   process(messages: RawOperationMessage[]) 
   {
-    const messagesToProduce: ISequencedDocumentMessage[] = [];
+    const messagesToProduce: SequencedMessage<DocumentMessage>[] = [];
 
     for (const message of messages) 
     {
       const operation = message.operation;
 
-      if (operation.type === MessageType.ClientJoin) 
+      if (operation.type === "join")
       {
         const isNewClient = this.clientManager.upsertClient(
           operation.contents.clientId,
@@ -49,9 +49,9 @@ export class Room extends EventEmitter<RoomEvents>
           return;
       }
 
-      if (message.operation.type === MessageType.ClientLeave) 
+      if (message.operation.type === "leave")
       {
-        const leaveInfo = message.operation as IClientLeave;
+        const leaveInfo = message.operation;
 
         if (!this.clientManager.removeClient(leaveInfo.contents.clientId))
           return;
@@ -60,7 +60,7 @@ export class Room extends EventEmitter<RoomEvents>
           this.emit("noClients");
       }
 
-      if (message.operation.type === MessageType.Delta)
+      if (message.operation.type === "op")
       {
         if (!message.clientId)
           return;
@@ -84,7 +84,7 @@ export class Room extends EventEmitter<RoomEvents>
       messagesToProduce.push({
         clientId: message.clientId,
         clientSequenceNumber: message.operation.clientSequenceNumber,
-        operation: message.operation.contents,
+        contents: message.operation,
         sequenceNumber,
         type: message.operation.type,
       });

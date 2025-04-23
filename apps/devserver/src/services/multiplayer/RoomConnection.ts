@@ -1,32 +1,38 @@
-import { IClient, IDocumentDelta, MessageType } from "@unison/shared-definitions";
+import { ClientDetail, DocumentOperation } from "@unison/shared-definitions";
 import { RawOperationMessage } from "./Room";
 
-export class RoomConnection
+export class RoomConnection 
 {
+  private readonly documentId: string;
+  private readonly clientId: string;
+
   constructor(
-    private readonly documentId: string,
-    private readonly clientId: string,
+    { documentId, clientId, }: { documentId: string; clientId: string },
     send: (message: RawOperationMessage) => void
   ) 
   {
-    this.send = (message: RawOperationMessage) => 
-    {
-      if (this.closed)
-        return;
+    this.documentId = documentId;
+    this.clientId = clientId;
 
-      send(message);
-    };
+    this
+      .send = (message: RawOperationMessage) => 
+      {
+        if (this.closed)
+          return;
+
+        send(message);
+      };
   }
 
   private readonly send: (message: RawOperationMessage) => void;
 
   private closed = false;
 
-  connect(client: IClient)
+  connect(client: ClientDetail) 
   {
     this.send({
       operation: {
-        type: MessageType.ClientJoin,
+        type: "join",
         clientSequenceNumber: -1,
         contents: {
           clientId: this.clientId,
@@ -38,7 +44,7 @@ export class RoomConnection
     });
   }
 
-  sendOps(operation: IDocumentDelta)
+  sendOps(operation: DocumentOperation) 
   {
     this.send({
       clientId: this.clientId,
@@ -52,16 +58,16 @@ export class RoomConnection
     if (this.closed)
       return;
 
-    this.closed = true;
-
     this.send({
       clientId: null,
       timestamp: Date.now(),
       operation: {
-        type: MessageType.ClientLeave,
+        type: "leave",
         clientSequenceNumber: -1,
         contents: { clientId: this.clientId }
       }
     });
+
+    this.closed = true;
   }
 }

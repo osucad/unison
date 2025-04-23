@@ -4,16 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/server/message-sequencer"
-    },
-    {
       "path": "./tools/eslint-rules"
-    },
-    {
-      "path": "./packages/client/client-definitions"
-    },
-    {
-      "path": "./packages/client/client-test-utils"
     },
     {
       "path": "./packages/shared/shared-definitions"

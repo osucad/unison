@@ -1,4 +1,3 @@
-import { IOperation, MessageType } from "@unison/shared-definitions";
 import { DDS, DDSAttributes, DDSFactory } from "../dds/index.js";
 import { nn } from "../utils/nn.js";
 import { DeltaManager } from "./DeltaManager.js";
@@ -64,7 +63,7 @@ export class Document<T extends object = object>
   private load(
     schema: DocumentSchema,
     summary: IDocumentSummary,
-    deltas: DeltaManager)
+    deltas: DeltaManager) 
   {
     this.runtime.load(summary.entries);
 
@@ -86,21 +85,30 @@ export class Document<T extends object = object>
     {
       deltas.submitOps({
         clientSequenceNumber: 0,
-        type: MessageType.Delta,
+        type: "op",
         contents: [
           {
             target: dds?.id ?? null,
             contents: op
           }
-        ]
+        ],
       });
     });
 
     deltas.on("deltas", (message, local) => 
     {
-      if (message.type === MessageType.Delta) 
+      const operation = message.contents;
+
+      if (operation.type === "op")
       {
-        this.runtime.process(message.operation as IOperation[], local);
+        for (const op of operation.contents) 
+        {
+          this.runtime.process({
+            ...message,
+            type: operation.type,
+            contents: op,
+          }, local);
+        }
       }
     });
 

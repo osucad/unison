@@ -1,17 +1,17 @@
 import { ITokenProvider, ITokenResult } from "./ITokenProvider.js";
-import { IToken, IUser } from "@unison/shared-definitions";
+import { TokenClaims, UserDetails } from "@unison/shared-definitions";
 
 export class InsecureTokenProvider implements ITokenProvider
 {
   async getToken(documentId: string | undefined, scopes: string[]): Promise<ITokenResult> 
   {
-    const token: IToken  = {
+    const token: TokenClaims  = {
       documentId,
       scopes,
       user: {
         id: "dummy-user",
         username: "testuser"
-      } as IUser
+      } as UserDetails
     };
 
     return {

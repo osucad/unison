@@ -1,12 +1,12 @@
-import { IDocumentSummary } from "@unison/shared-definitions";
+import { DocumentSummary } from "@unison/shared-definitions";
 import { randomUUID } from "node:crypto";
 import { IDocumentStorage } from "./IDocumentStorage";
 
 export class InMemoryDocumentStorage implements IDocumentStorage 
 {
-  private readonly summaries = new Map<string, IDocumentSummary[]>();
+  private readonly summaries = new Map<string, DocumentSummary[]>();
 
-  async getSummary(documentId: string, sequenceNumber: number | "latest"): Promise<IDocumentSummary | null> 
+  async getSummary(documentId: string, sequenceNumber: number | "latest"): Promise<DocumentSummary | null>
   {
     const summaries = this.getSummaries(documentId);
 
@@ -16,12 +16,12 @@ export class InMemoryDocumentStorage implements IDocumentStorage
     return summaries.find(it => it.sequenceNumber === sequenceNumber) ?? null;
   }
 
-  async appendSummary(documentId: string, summary: IDocumentSummary): Promise<void> 
+  async appendSummary(documentId: string, summary: DocumentSummary): Promise<void>
   {
     this.getSummaries(documentId).push(summary);
   }
 
-  async createDocument(summary: Omit<IDocumentSummary, "sequenceNumber">): Promise<string> 
+  async createDocument(summary: Omit<DocumentSummary, "sequenceNumber">): Promise<string>
   {
     const documentId = randomUUID();
 
@@ -30,7 +30,7 @@ export class InMemoryDocumentStorage implements IDocumentStorage
     return documentId;
   }
 
-  private getSummaries(documentId: string): IDocumentSummary[] 
+  private getSummaries(documentId: string): DocumentSummary[]
   {
     let summaries = this.summaries.get(documentId);
     if (summaries === undefined)

@@ -1,7 +1,10 @@
-import { IUser } from "./user.js";
-
-export interface IClient 
+export interface ClientDetail
 {
-  user: IUser;
-  scopes: string[];
+  readonly user: UserDetails;
+  readonly scopes: string[];
+}
+
+export interface UserDetails extends Record<string, unknown>
+{
+  id: string;
 }

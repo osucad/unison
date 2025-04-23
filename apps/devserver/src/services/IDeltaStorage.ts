@@ -1,8 +1,8 @@
-import { ISequencedDocumentMessage } from "@unison/shared-definitions";
+import { DocumentMessage, SequencedMessage } from "@unison/shared-definitions";
 
 export interface IDeltaStorage 
 {
-  getDeltas(documentId: string, first: number, last?: number): Promise<ISequencedDocumentMessage[]>;
+  getDeltas(documentId: string, first: number, last?: number): Promise<SequencedMessage<DocumentMessage>[]>;
 
-  append(documentId: string, deltas: ISequencedDocumentMessage[]): Promise<void>;
+  append(documentId: string, deltas: SequencedMessage<DocumentMessage>[]): Promise<void>;
 }

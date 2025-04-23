@@ -1,4 +1,4 @@
-export interface IConnect 
+export interface Connect
 {
   version: string;
   documentId: string;

@@ -1,29 +1,31 @@
-import { ISequencedDocumentMessage } from "@unison/shared-definitions";
+import { DocumentMessage, SequencedMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { IProducer } from "../../multiplayer/IProducer";
 import { Room } from "./Room";
 import { RoomConnection } from "./RoomConnection";
 
-export interface RoomServiceEvents
+export interface RoomServiceEvents 
 {
-  deltasProduced: (documentId: string, deltas: ISequencedDocumentMessage[]) => void;
+  deltasProduced: (documentId: string, deltas: SequencedMessage<DocumentMessage>[]) => void;
   stop: () => void;
 }
 
-export class RoomService extends EventEmitter<RoomServiceEvents>
+export class RoomService extends EventEmitter<RoomServiceEvents> 
 {
   private readonly rooms = new Map<string, Room>();
 
-  async getConnection(documentId: string, clientId: string): Promise<RoomConnection>
+  async getConnection({ documentId, clientId }: { documentId: string; clientId: string }): Promise<RoomConnection> 
   {
     return new RoomConnection(
-      documentId,
-      clientId,
+      {
+        documentId,
+        clientId,
+      },
       message => this.getRoom(documentId).process([message])
     );
   }
 
-  private getRoom(documentId: string)
+  private getRoom(documentId: string) 
   {
     let room = this.rooms.get(documentId);
 
@@ -33,7 +35,7 @@ export class RoomService extends EventEmitter<RoomServiceEvents>
     return room;
   }
 
-  private createRoom(documentId: string)
+  private createRoom(documentId: string) 
   {
     const room = new Room(
       documentId,
@@ -47,22 +49,22 @@ export class RoomService extends EventEmitter<RoomServiceEvents>
     return room;
   }
 
-  private onMessagesProduced = (messages: ISequencedDocumentMessage[], documentId: string) => 
+  private onMessagesProduced = (messages: SequencedMessage<DocumentMessage>[], documentId: string) =>
   {
     this.emit("deltasProduced", documentId, messages);
   };
 }
 
-export class DeltasProducer implements IProducer<ISequencedDocumentMessage>
+export class DeltasProducer implements IProducer<SequencedMessage<DocumentMessage>>
 {
   constructor(
     readonly documentId: string,
-    readonly onMessagesProduced: (messages: ISequencedDocumentMessage[], documentId: string) => void
-  )
+    readonly onMessagesProduced: (messages: SequencedMessage<DocumentMessage>[], documentId: string) => void
+  ) 
   {
   }
 
-  send(messages: ISequencedDocumentMessage[]): void 
+  send(messages: SequencedMessage<DocumentMessage>[]): void
   {
     this.onMessagesProduced(messages, this.documentId);
   }

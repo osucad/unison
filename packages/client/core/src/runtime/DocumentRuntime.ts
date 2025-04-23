@@ -1,13 +1,13 @@
+import { DocumentOperation, RuntimeOperation, SequencedMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { DDS, DDSAttributes } from "../dds/DDS.js";
 import { DDSContext } from "../dds/DDSContext.js";
 import { DDSFactory } from "../dds/DDSFactory.js";
 import { nn } from "../utils/nn.js";
+import { IObjectSummary } from "./Document.js";
 import { IdGenerator } from "./IdGenerator.js";
 import { OpDecoder } from "./OpDecoder.js";
 import { RuntimeEncoder } from "./RuntimeEncoder.js";
-import { IObjectSummary } from "./Document.js";
-import { IOperation } from "@unison/shared-definitions";
 
 export interface DocumentRuntimeEvents 
 {
@@ -16,7 +16,7 @@ export interface DocumentRuntimeEvents
   attach(object: DDS): void;
 }
 
-export interface ICreateObjectOperation 
+export interface CreateObjectOperation
 {
   type: "create";
   id: string;
@@ -107,49 +107,30 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
     this.emit("localOp", dds, op);
   }
 
-  public process(ops: IOperation[], local: boolean)
+  public process(message: SequencedMessage<RuntimeOperation>, local: boolean)
   {
     const decoder = new OpDecoder(this);
-    const lateInitFns: (() => void)[] = [];
 
-    function flushLateInitFns() 
+    const op = message.contents;
+
+    if (op.target === null)
     {
-      if (lateInitFns.length > 0) 
-      {
-        lateInitFns.forEach(it => it());
-        lateInitFns.splice(0);
-      }
+      if (local)
+        return;
+
+      const { attributes, contents, id } = op.contents as CreateObjectOperation;
+
+      const dds = this._create(attributes);
+      dds.load(contents, decoder);
+      this._attach(dds, id);
+      return;
     }
-
-    for (const op of ops) 
+    else
     {
-      if (op.target === null) 
-      {
-        if (local)
-          continue;
-
-        const { attributes, contents, id } = op.contents as ICreateObjectOperation;
-
-        const dds = this._create(attributes);
-        decoder.objects.set(id, dds);
-
-        // objects may have circular references so we don't wanna load them until all of them are registered
-        lateInitFns.push(() => 
-        {
-          dds.load(contents, decoder);
-          this._attach(dds, id);
-        });
-        continue;
-      }
-
-      flushLateInitFns();
-
       const context = this._objects.get(op.target);
 
       context?.process(op.contents, local, decoder);
     }
-
-    flushLateInitFns();
   }
 
   createSummary(

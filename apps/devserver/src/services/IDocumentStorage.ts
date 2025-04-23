@@ -1,10 +1,10 @@
-import { IDocumentSummary } from "@unison/shared-definitions";
+import { DocumentSummary } from "@unison/shared-definitions";
 
 export interface IDocumentStorage 
 {
-  getSummary(documentId: string, sequenceNumber: number | "latest"): Promise<IDocumentSummary | null>;
+  getSummary(documentId: string, sequenceNumber: number | "latest"): Promise<DocumentSummary | null>;
 
-  appendSummary(documentId: string, summary: IDocumentSummary): Promise<void>;
+  appendSummary(documentId: string, summary: DocumentSummary): Promise<void>;
 
-  createDocument(summary: Omit<IDocumentSummary, "sequenceNumber">): Promise<string>;
+  createDocument(summary: Omit<DocumentSummary, "sequenceNumber">): Promise<string>;
 }

@@ -1,7 +1,7 @@
-import { IToken } from "@unison/shared-definitions";
+import { TokenClaims } from "@unison/shared-definitions";
 import { Result } from "neverthrow";
 
 export interface ITokenVerifier 
 {
-  verifyToken(token: string): Result<IToken, unknown>;
+  verifyToken(token: string): Result<TokenClaims, unknown>;
 }

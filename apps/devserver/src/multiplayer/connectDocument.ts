@@ -1,4 +1,4 @@
-import { ClientMessages, ConnectDocumentFailure, IConnect, invalidToken, PROTOCOL_VERSION, ScopeTypes, ServerMessages, versionMismatch } from "@unison/shared-definitions";
+import { ClientMessages, ConnectDocumentFailure, Connect, invalidToken, PROTOCOL_VERSION, ScopeTypes, ServerMessages, versionMismatch } from "@unison/shared-definitions";
 import { err, ok, Result } from "neverthrow";
 import { Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
@@ -6,7 +6,7 @@ import { RoomConnection } from "../services/multiplayer/RoomConnection";
 
 export async function connectDocument(
   client: Socket<ClientMessages, ServerMessages>,
-  options: IConnect,
+  options: Connect,
   { roomService, tokenVerifier }: IUnisonServerResources,
 ): Promise<Result<RoomConnection, ConnectDocumentFailure>> 
 {
@@ -28,7 +28,10 @@ export async function connectDocument(
   if (!token.scopes.includes(ScopeTypes.Read))
     return err(invalidToken());
 
-  const connection = await roomService.getConnection(documentId, client.id);
+  const connection = await roomService.getConnection({
+    documentId,
+    clientId: client.id
+  });
 
   client.join(documentId);
 

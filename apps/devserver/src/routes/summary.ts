@@ -1,4 +1,4 @@
-import { IDocumentSummary, ScopeTypes } from "@unison/shared-definitions";
+import { DocumentSummary, ScopeTypes } from "@unison/shared-definitions";
 import { Router } from "express";
 import { requireDocumentScopes, requireScopes } from "../middlewares/scopes";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
@@ -27,7 +27,7 @@ export function createSummaryRoutes({ tokenVerifier, documentStorage }: IUnisonS
     async (req, res) => 
     {
       const documentId = req.params.documentId;
-      const summary: IDocumentSummary = req.body.summary;
+      const summary: DocumentSummary = req.body.summary;
 
       await documentStorage.appendSummary(documentId, summary);
 

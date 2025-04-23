@@ -1,4 +1,4 @@
-import { alreadyConnected, ClientMessages, MessageType, ServerMessages } from "@unison/shared-definitions";
+import { alreadyConnected, ClientMessages, ServerMessages } from "@unison/shared-definitions";
 import { Server, Socket } from "socket.io";
 import { IUnisonServerResources } from "../services/IUnisonServerResources";
 import { RoomConnection } from "../services/multiplayer/RoomConnection";
@@ -78,7 +78,7 @@ function handleConnection(
       return;
     }
 
-    if (message.type !== MessageType.Delta)
+    if (message.type !== "op")
       return;
 
     connection.sendOps(message);
@@ -90,7 +90,7 @@ function handleConnection(
       cleanupConnection(documentId, connection);
   });
 
-  const cleanupConnection = (documentId: string, connection: RoomConnection) =>
+  const cleanupConnection = (documentId: string, connection: RoomConnection) => 
   {
     connectionMap.delete(documentId);
     connection.close();

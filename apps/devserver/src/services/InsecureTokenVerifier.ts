@@ -1,4 +1,4 @@
-import { IToken } from "@unison/shared-definitions";
+import { TokenClaims } from "@unison/shared-definitions";
 import { ITokenVerifier } from "./ITokenVerifier";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 
@@ -12,7 +12,7 @@ const safeParse = fromThrowable(JSON.parse);
  */
 export class InsecureTokenVerifier implements ITokenVerifier
 {
-  verifyToken(token: string): Result<IToken, unknown>
+  verifyToken(token: string): Result<TokenClaims, unknown>
   {
     return safeParse(token)
       .andThen(token => token.insecureToken ? ok(token.insecureToken) : err());
