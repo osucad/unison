@@ -12,7 +12,7 @@ export class Beatmap extends ObjectDDS
   }
 
   @property()
-  readonly metadata = new BeatmapMetadata();
+  metadata = new BeatmapMetadata();
 }
 
 export class BeatmapMetadata extends ObjectDDS 

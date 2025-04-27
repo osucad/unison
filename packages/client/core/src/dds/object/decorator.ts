@@ -4,9 +4,9 @@ import { Property } from "./Property.js";
 
 const metadataKey = Symbol("ObjectDDS.properties");
 
-export function property(): PropertyDecorator 
+export function property(): PropertyDecorator
 {
-  return (target, propertyKey) => 
+  return (target, propertyKey) =>
   {
     if (typeof propertyKey !== "string")
       throw new Error("Only string keys are supported");

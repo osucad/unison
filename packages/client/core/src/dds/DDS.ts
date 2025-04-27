@@ -47,6 +47,8 @@ export abstract class DDS<TEvents extends DDSEvents = any> extends EventEmitter<
   abstract load(summary: unknown, decoder: IDecoder): void;
 
   public abstract process(contents: unknown, local: boolean, decoder: IDecoder): void;
+
+  public abstract replayOp(contents: unknown, decoder: IDecoder): void;
 }
 
 export interface DDSAttributes

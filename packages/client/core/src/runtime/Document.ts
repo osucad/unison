@@ -6,6 +6,7 @@ import { nn } from "../utils/nn.js";
 import { DeltaManager } from "./DeltaManager.js";
 import { DocumentRuntime } from "./DocumentRuntime.js";
 import { DocumentSchema, UnwrapDocumentSchema } from "./DocumentSchema.js";
+import { HistoryManager } from "./HistoryManager.js";
 
 export interface IDocumentOptions<T extends DocumentSchema> 
 {
@@ -21,6 +22,7 @@ export class Document<T extends object = object>
 
   private deltaManager: DeltaManager;
   private storageService: StorageService;
+  readonly history: HistoryManager;
 
   id: string | null = null;
 
@@ -41,6 +43,7 @@ export class Document<T extends object = object>
     this.runtime = new DocumentRuntime(ddsTypes);
     this.storageService = storageService;
     this.deltaManager = new DeltaManager(connectionFactory, tokenProvider);
+    this.history = new HistoryManager(this.runtime);
   }
 
   private createDetached(schema: DocumentSchema) 

@@ -71,6 +71,8 @@ export class ObjectDDSKernel
 
   setValue(property: Property, newValue: any) 
   {
+    const previousValue = Reflect.get(this.target, property.key);
+
     Reflect.set(this.target, property.key, newValue);
 
     this.target.emit("changed", property.key, newValue);
@@ -90,7 +92,15 @@ export class ObjectDDSKernel
       version
     };
 
-    this._context?.submitLocalOp(op);
+    const undo: IObjectMessage = {
+      type: "set",
+      values: {
+        [property.key]: this._context.encoder.encode(previousValue)
+      },
+      version,
+    };
+
+    this._context?.submitLocalOp(op, { undo });
   }
 
   private _proxy!: ObjectDDS;
@@ -118,10 +128,8 @@ export class ObjectDDSKernel
     return this._proxy;
   }
 
-  public process(message: IObjectMessage, local: boolean, decoder: IDecoder)
+  public process(message: IObjectMessage, local: boolean, decoder: IDecoder) 
   {
-    console.log("process", message, local);
-
     if (message.type !== "set")
       return;
 
@@ -143,13 +151,27 @@ export class ObjectDDSKernel
         continue;
 
       const property = metadata.getProperty(key);
-      if(!property)
+      if (!property)
         continue;
 
       const value = decoder.decode(message.values[key]);
 
       Reflect.set(target, key, value);
       target.emit("changed", key, value);
+    }
+  }
+
+  public replayOp(op: IObjectMessage, decoder: IDecoder) 
+  {
+    for (const key in op.values) 
+    {
+      const property = this.metadata.getProperty(key);
+      if (!property)
+        continue;
+
+      const value = decoder.decode(op.values[key]);
+
+      this.setValue(property, value);
     }
   }
 }

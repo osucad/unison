@@ -1,5 +1,6 @@
-import { UnisonClient } from "@unison-client/core";
+import { UnisonClient, Document } from "@unison-client/core";
 import { Beatmap, BeatmapMetadata } from "./Beatmap";
+import html from "nanohtml";
 
 const client = new UnisonClient("http://localhost:3333");
 
@@ -19,7 +20,7 @@ async function start()
 
     location.hash = document.id!;
 
-    render(document.root.beatmap);
+    render(document, document.root.beatmap);
   }
   else 
   {
@@ -33,20 +34,28 @@ async function start()
       ]
     });
 
-    render(document.root.beatmap);
+    render(document, document.root.beatmap);
   }
 }
 
-function render(beatmap: Beatmap) 
+function render(document: Document, beatmap: Beatmap)
 {
   const { metadata } = beatmap;
 
-  const label = document.createElement("label");
-  label.innerText = "Value: ";
+  const el = html`
+    <div>
+        <label>Value: </label>
+        <input type="text" onchange=${() => document.history.commit()}>
+    </div>
+    <div>
+        <button onclick=${() => document.history.undo()}>Undo</button>
+        <button onclick=${() => document.history.redo()}>Redo</button>
+    </div>
+  `;
 
-  document.body.appendChild(label);
+  window.document.body.append(el);
 
-  const input = document.createElement("input");
+  const input = window.document.querySelector("input")!;
   input.value = beatmap.metadata.artist;
 
   input.oninput = () => 
@@ -59,9 +68,6 @@ function render(beatmap: Beatmap)
     if (property === "artist")
       input.value = metadata.artist;
   });
-
-  document.body.appendChild(input);
-
 }
 
 void start();

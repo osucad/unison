@@ -16,13 +16,23 @@ export class DDSContext
 
   readonly encoder: IEncoder;
 
-  submitLocalOp(op: unknown) 
+  submitLocalOp(op: unknown, options?: SubmitLocalOpOptions)
   {
-    this.runtime.submitLocalOp(this.target, op);
+    this.runtime.submitLocalOp(this.target, op, options);
   }
 
-  public process(contents: unknown, local: boolean, decoder: IDecoder)
+  public process(contents: unknown, local: boolean, decoder: IDecoder) 
   {
     this.target.process(contents, local, decoder);
   }
+
+  public replayOp(contents: unknown, decoder: IDecoder)
+  {
+    this.target.replayOp(contents, decoder);
+  }
+}
+
+export interface SubmitLocalOpOptions 
+{
+  undo?: unknown;
 }

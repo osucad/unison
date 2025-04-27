@@ -49,4 +49,9 @@ export abstract class ObjectDDS extends DDS<ObjectEvents>
   {
     this.kernel.process(contents as IObjectMessage,local, decoder);
   }
+
+  public override replayOp(contents: unknown, decoder: IDecoder) 
+  {
+    this.kernel.replayOp(contents as IObjectMessage, decoder);
+  }
 }

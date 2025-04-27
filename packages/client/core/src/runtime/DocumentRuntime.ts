@@ -1,7 +1,7 @@
 import { RuntimeOperation, SequencedMessage } from "@unison/shared-definitions";
 import { EventEmitter } from "eventemitter3";
 import { DDS, DDSAttributes } from "../dds/DDS.js";
-import { DDSContext } from "../dds/DDSContext.js";
+import { DDSContext, SubmitLocalOpOptions } from "../dds/DDSContext.js";
 import { DDSFactory } from "../dds/DDSFactory.js";
 import { nn } from "../utils/nn.js";
 import { IObjectSummary } from "./Document.js";
@@ -11,12 +11,12 @@ import { RuntimeEncoder } from "./RuntimeEncoder.js";
 
 export interface DocumentRuntimeEvents 
 {
-  localOp(dds: DDS | null, op: unknown): void;
+  localOp(dds: DDS | null, op: unknown, options: SubmitLocalOpOptions): void;
 
   attach(object: DDS): void;
 }
 
-export interface CreateObjectOperation
+export interface CreateObjectOperation 
 {
   type: "create";
   id: string;
@@ -32,7 +32,7 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
 
   readonly encoder = new RuntimeEncoder(this);
 
-  constructor(types: readonly DDSFactory[] = [])
+  constructor(types: readonly DDSFactory[] = []) 
   {
     super();
 
@@ -102,18 +102,18 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
     }
   }
 
-  public submitLocalOp(dds: DDS | null, op: unknown) 
+  public submitLocalOp(dds: DDS | null, op: unknown, options?: SubmitLocalOpOptions) 
   {
-    this.emit("localOp", dds, op);
+    this.emit("localOp", dds, op, options ?? {});
   }
 
-  public process(message: SequencedMessage<RuntimeOperation>, local: boolean)
+  public process(message: SequencedMessage<RuntimeOperation>, local: boolean) 
   {
     const decoder = new OpDecoder(this);
 
     const op = message.contents;
 
-    if (op.target === null)
+    if (op.target === null) 
     {
       if (local)
         return;
@@ -125,7 +125,7 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
       this._attach(dds, id);
       return;
     }
-    else
+    else 
     {
       const context = this._objects.get(op.target);
 
@@ -133,9 +133,18 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
     }
   }
 
+  replayOp(target: string, op: unknown)
+  {
+    const decoder = new OpDecoder(this);
+
+    const ctx = this._objects.get(target);
+    if (ctx)
+      ctx.replayOp(op, decoder);
+  }
+
   createSummary(
     entryPoint: readonly DDS[]
-  ): Record<string, IObjectSummary>
+  ): Record<string, IObjectSummary> 
   {
     const remainingObjects: DDS[] = [...entryPoint];
     const trackedObjects = new Set<DDS>(entryPoint);
@@ -153,7 +162,7 @@ export class DocumentRuntime extends EventEmitter<DocumentRuntimeEvents>
 
     const summaries: Record<string, IObjectSummary> = {};
 
-    while(remainingObjects.length > 0) 
+    while (remainingObjects.length > 0) 
     {
       const dds = nn(remainingObjects.shift());
 

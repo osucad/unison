@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@unison-client/core": "workspace:^",
+    "nanohtml": "^1.10.0",
     "stringify-object": "^5.0.0"
   },
   "nx": {
