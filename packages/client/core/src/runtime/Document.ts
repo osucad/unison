@@ -155,6 +155,8 @@ export class Document<T extends object = object>
       }
     });
 
+    await connectP;
+
     this.deltaManager.resume();
   }
 

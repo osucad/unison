@@ -16,7 +16,6 @@ export class ConnectionFactory
       this.endpoint,
       {
         transports: ["websocket"],
-        autoConnect: false,
       }
     );
 
