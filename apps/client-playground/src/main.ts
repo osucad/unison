@@ -5,10 +5,8 @@ const client = new UnisonClient("http://localhost:3333");
 
 async function start() 
 {
-  if (location.pathname === "/")
+  if (!location.hash)
   {
-
-
     const document = await client.createDocument({
       schema: {
         beatmap: Beatmap,
@@ -19,15 +17,13 @@ async function start()
       ]
     });
 
-    window.history.replaceState(undefined, "", `/${document.id}`);
+    location.hash = document.id!;
 
     render(document.root.beatmap);
   }
   else 
   {
-    const id = location.pathname.substring(1);
-
-    const document = await client.load(id, {
+    const document = await client.load(location.hash.substring(1), {
       schema: {
         beatmap: Beatmap,
       },
