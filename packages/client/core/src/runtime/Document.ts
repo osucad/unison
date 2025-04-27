@@ -42,7 +42,7 @@ export class Document<T extends object = object>
   {
     this.runtime = new DocumentRuntime(ddsTypes);
     this.storageService = storageService;
-    this.deltaManager = new DeltaManager(connectionFactory, tokenProvider);
+    this.deltaManager = new DeltaManager(this.runtime, connectionFactory, tokenProvider);
     this.history = new HistoryManager(this.runtime);
   }
 
@@ -126,37 +126,6 @@ export class Document<T extends object = object>
       console.assert(key in root);
 
     this.root = Object.freeze(root) as T;
-
-    this.runtime.on("localOp", (dds, op) =>
-    {
-      this.deltaManager.submitOps({
-        clientSequenceNumber: 0,
-        type: "op",
-        contents: [
-          {
-            target: dds?.id ?? null,
-            contents: op
-          }
-        ],
-      });
-    });
-
-    this.deltaManager.on("deltas", (message, local) =>
-    {
-      const operation = message.contents;
-
-      if (operation.type === "op")
-      {
-        for (const op of operation.contents)
-        {
-          this.runtime.process({
-            ...message,
-            type: operation.type,
-            contents: op,
-          }, local);
-        }
-      }
-    });
 
     await connectP;
 

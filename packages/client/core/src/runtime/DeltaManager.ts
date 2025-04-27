@@ -4,6 +4,7 @@ import { EventEmitter } from "eventemitter3";
 import { TokenProvider } from "../client/TokenProvider.js";
 import { ConnectionFactory, UnisonClientSocket } from "../services/ConnectionFactory.js";
 import { nn } from "../utils/nn.js";
+import { DocumentRuntime } from "./DocumentRuntime.js";
 
 export class DeltaManager extends EventEmitter<{
   deltas(deltas: SequencedMessage<DocumentMessage>, local: boolean): void;
@@ -16,6 +17,7 @@ export class DeltaManager extends EventEmitter<{
   private clientId!: string;
 
   constructor(
+    private readonly runtime: DocumentRuntime,
     private readonly connectionFactory: ConnectionFactory,
     private readonly tokenProvider: TokenProvider,
   ) 
@@ -84,19 +86,50 @@ export class DeltaManager extends EventEmitter<{
 
       this.processQueue();
 
-      for (const msg of deltas)
-        this.emit("deltas", msg, msg.clientId === socket.id);
+      for (const message of deltas)
+        this.process(message);
+    });
+
+    this.runtime.on("localOp", (dds, op) =>
+    {
+      this.submitOps({
+        clientSequenceNumber: 0,
+        type: "op",
+        contents: [
+          {
+            target: dds?.id ?? null,
+            contents: op
+          }
+        ],
+      });
     });
   }
 
   private processQueue() 
   {
-    let msg = this.queue.dequeue();
+    let message = this.queue.dequeue();
 
-    while (msg !== undefined)
+    while (message !== undefined)
     {
-      this.emit("deltas", msg, msg.clientId === this.clientId);
-      msg = this.queue.dequeue();
+      this.process(message);
+      message = this.queue.dequeue();
+    }
+  }
+
+  private process(message: SequencedMessage<DocumentMessage>)
+  {
+    const operation = message.contents;
+
+    if (operation.type === "op")
+    {
+      for (const op of operation.contents)
+      {
+        this.runtime.process({
+          ...message,
+          type: operation.type,
+          contents: op,
+        }, message.clientId === this.clientId);
+      }
     }
   }
 }
