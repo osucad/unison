@@ -34,9 +34,9 @@
           "platform": "node",
           "outputPath": "apps/devserver/dist",
           "format": [
-            "cjs"
+            "esm"
           ],
-          "bundle": false,
+          "bundle": true,
           "main": "apps/devserver/src/main.ts",
           "tsConfig": "apps/devserver/tsconfig.app.json",
           "assets": [
